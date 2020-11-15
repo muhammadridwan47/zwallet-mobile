@@ -23,15 +23,15 @@ export default function Admin({navigation}) {
         User?.data?.data && setDashboard(User?.data?.data[0])
         API.HistoryHome().then(res => {
             setTransaction(res.data)
-            console.log('dari dashboard: ',res)
-            console.log('dari tran: ',transaction)
+            // console.log('dari dashboard: ',res)
+            // console.log('dari tran: ',transaction)
         })
         API.UserAll().then(res => {
-            console.log('get all user ',res.data)
+            // console.log('get all user ',res.data)
             setCountUser(res.data.length)
         })
         API.TransactionAll().then(res => {
-            console.log('isi dari transaction all',res.data)
+            // console.log('isi dari transaction all',res.data)
 
             let countAmount = res.data.map( (item,index) => {
                 const countBalance = parseInt(item.amountTransfer)
@@ -51,7 +51,7 @@ export default function Admin({navigation}) {
         })
 
 
-        console.log(dashboard)
+        // console.log(dashboard)
     },[User])
 
     const handleTopUp = () =>

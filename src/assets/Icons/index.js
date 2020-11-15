@@ -25,6 +25,9 @@ import IcAddImage from './AddImage.svg'
 import IcAdmTransaction from './AdmTransaction.svg'
 import IcAllUsers from './AllUsers.svg'
 import IcChart from './Chart.svg'
+import IcMailWrong from './MailWrong.svg'
+import IcPasswordWrong from './PasswordWrong.svg'
+import IcPersonWrong from './PersonWrong.svg'
 export {
     IcMail,
     IcEyeErossed,
@@ -52,6 +55,9 @@ export {
     IcAddImage,
     IcAdmTransaction,
     IcAllUsers,
-    IcChart
+    IcChart,
+    IcMailWrong,
+    IcPasswordWrong,
+    IcPersonWrong
     
 }

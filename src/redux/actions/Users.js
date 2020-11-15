@@ -29,11 +29,11 @@ export const GetUsers = (fields) => {
         return Axios.get(`${URI}/user`,headers)
         .then((res)=> {
             const data = res.data
-            console.log('hasil dari redux user: ',data)
+            // console.log('hasil dari redux user: ',data)
             dispatch(UsersSuccess(data))
         }).catch((err)=> {
             const message = err.message
-            console.log('user error redux user: ',message)
+            // console.log('user error redux user: ',message)
             dispatch(UsersError(message))
         })
     }

@@ -6,13 +6,15 @@ import { LinkAuth } from '../../components';
 import { ButtonAuth, FormGroup } from '../../elements';
 import { SignUpAction } from '../../redux/actions/Auth';
 import { Gap} from '../../utils';
-
+import { showMessage} from "react-native-flash-message";
 
 const SignUp = ({navigation}) => {
   const [userName,setUserName] = useState('')
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
   const [active,setActive] = useState(false)
+  const [showKey,setShowKey] = useState(true)
+
   const dispacth = useDispatch();
 
   const onHandle = (e) =>
@@ -24,26 +26,35 @@ const SignUp = ({navigation}) => {
 
   const onRegister = () => {
     if (!userName) {
-      alert('username is required')
+      showMessage({
+        message: "Username is required",
+        type: "danger",
+      });
       return false
     }
 
     if (!email) {
-      alert('email is required')
+      showMessage({
+        message: "Email is required",
+        type: "danger",
+      });
       return false
     }
+
     if (!password) {
-      alert('password is required')
+      showMessage({
+        message: "Password is required",
+        type: "danger",
+      });
       return false
     }
-
-
 
     let data = {
       email: email,
       password: password,
       fullName: userName,
     }
+
     dispacth(SignUpAction(data))
     AsyncStorage.setItem('emailRegister',email)
     setPassword('')
@@ -51,10 +62,11 @@ const SignUp = ({navigation}) => {
     setUserName('')
     navigation.navigate('CreatePin')
   }
-
-
-
-
+  const showPassword = (value) => 
+  {
+      const key = value === false ? true : false
+      setShowKey(key)
+  }
   return (
     <>
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
@@ -71,7 +83,7 @@ const SignUp = ({navigation}) => {
             <Gap height={60}/>
             <FormGroup icon="mail" placeholder="Enter your e-mail"  value={email} onChangeText={(e) => setEmail(e)}/>
             <Gap height={60}/>
-            <FormGroup icon="password" placeholder="Create your password" value={password} onChangeText={(e) => onHandle(e)} secureTextEntry />
+            <FormGroup icon="password" placeholder="Create your password" value={password} onChangeText={(e) => onHandle(e)} secureTextEntry  secureTextEntry={showKey}  showPassword={() => showPassword(showKey)}/>
             <Gap height={15}/>
             <Gap height={75}/>
             <ButtonAuth title="Sign Up" onPress={() => onRegister()} active={active}/>
@@ -84,7 +96,6 @@ const SignUp = ({navigation}) => {
     </>
   );
 };
- 
 
 export default SignUp;
 

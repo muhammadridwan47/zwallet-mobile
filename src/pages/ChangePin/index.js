@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { GoBack } from '../../components';
 import { ButtonAuth, FormPin } from '../../elements';
 import { Gap, URI } from '../../utils';
+import { showMessage} from "react-native-flash-message";
 
 export default function ChangePin({navigation}) {
     const [pin1,setPin1] = useState('')
@@ -28,7 +29,10 @@ export default function ChangePin({navigation}) {
     {
 
         if (!pin1||!pin2||!pin3||!pin4||!pin5||!pin6) {
-            alert("Pin is required!")
+            showMessage({
+                message: "Pin is required!",
+                type: "danger",
+            });
             return false   
         }else{
             const pin = pin1+pin2+pin3+pin4+pin5+pin6;
@@ -53,7 +57,7 @@ export default function ChangePin({navigation}) {
                     const headers = { headers: {'Authorization': `${Auth.data.token.token}`}}   
                     Axios.patch(`${URI}/user/change_pin`,save,headers)
                     .then(res => {
-                        console.log(res.data)
+                        // console.log(res.data)
                         setPin1('')
                         setPin2('')
                         setPin3('')
@@ -61,6 +65,10 @@ export default function ChangePin({navigation}) {
                         setPin5('')
                         setPin6('')
                         SetOldPin('')
+                        showMessage({
+                            message: "Pin have been changed",
+                            type: "success",
+                        });  
                     })
                     .catch(err => {
                         setPin1('')
@@ -70,7 +78,11 @@ export default function ChangePin({navigation}) {
                         setPin5('')
                         setPin6('')
                         SetOldPin('')   
-                        console.log(err)
+                        showMessage({
+                            message: "Failed change pin!",
+                            type: "danger",
+                        });   
+                        // console.log(err)
                     });
 
                 }

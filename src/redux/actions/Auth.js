@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Axios from 'axios'
 import { URI } from '../../utils'
+import messaging from '@react-native-firebase/messaging';
+import API from '../../service'
 
 
 const AuthLoginRequest = ()=> {
@@ -44,7 +46,7 @@ const AuthRegisterError = (error)=> {
 
 
 export const AuthLogin = (fields) => {
-    console.log('isi dari redux login dispatch ',fields)
+    // console.log('isi dari redux login dispatch ',fields)
     return (dispatch) =>{
         dispatch(AuthLoginRequest())
         return Axios({
@@ -52,14 +54,16 @@ export const AuthLogin = (fields) => {
             data: fields,
             url: `${URI}/auth/login`
         }).then((res)=> {
-            console.log('berhasil redux login dispatch',res.data)
+            // console.log('berhasil redux login dispatch',res.data)
             const data = res.data
             AsyncStorage.setItem('token',res.data.token.token)
             dispatch(AuthLoginSuccess(data))
-
+            messaging().getToken().then(token => {
+                API.FCM({tokenFcm:token})
+            })
         }).catch((err)=> {
-            console.log('gagal redux login dispatch')
-            dispatch(AuthLoginError(data))
+            // console.log('gagal redux login dispatch')
+            dispatch(AuthLoginError(err))
         })
     }
 
@@ -79,7 +83,7 @@ export const SignUpAction = (data) => {
         }).catch((err)=> {
             const message = err.message
             dispatch(AuthRegisterError(message))
-            console.log(message)
+            // console.log(message)
         })
     }
 }

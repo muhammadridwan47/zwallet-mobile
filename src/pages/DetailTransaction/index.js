@@ -9,14 +9,14 @@ import { Gap } from '../../utils'
 
 export default function DetailTransaction({navigation,route}) {
     const {id} = route.params;
-    console.log(id)
+    // console.log(id)
     const [transaction,setTransaction] = useState([]);
     const [payment,setPayment] = useState({income:'',outcome:''});
 
     useEffect(() => {
         API.TransactionDetail()
         .then(res =>{
-            console.log('isi dari transaction detail :',res.data)
+            // console.log('isi dari transaction detail :',res.data)
             setTransaction(res.data)
             setPayment({income:res.income,outcome:res.outcome})
         })

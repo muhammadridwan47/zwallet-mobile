@@ -5,17 +5,53 @@ import { ButtonAuth, FormGroup } from '../../elements';
 import {Gap} from '../../utils';
 import { useSelector,useDispatch } from 'react-redux';
 import { AuthLogin } from '../../redux/actions/Auth';
-import { GetUsers } from '../../redux/actions/Users';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { showMessage} from "react-native-flash-message";
 const Login = ({navigation}) => {
     const [email,setEmail] = useState('angga@gmail.com')
     const [password,setPassword] = useState('12345678')
+    const [showKey,setShowKey] = useState(true)
+    const [errorHandling,setError] = useState(false)
+    const [active,setActive] = useState(false)
     const dispacth = useDispatch();
-    const onHandleLogin = () => {
+    const Auth = useSelector((s)=> s.Auth)
+    useEffect(() => {
+
+             Auth.isStatus === false ? setError(true) : setError(false)
+            // console.log('hasil dari auth: ',Auth)
+    },[Auth])
+
+    const form = (eml,pass) =>
+    {
+        setEmail(eml)
+        setPassword(pass)
+        eml !== '' && pass !== '' ? (setActive(true),setError(false)) : setActive(false)
+    }
+
+    const onHandleLogin = async () => {
+
+        if (!email) {
+            showMessage({
+                message: "Email is required",
+                type: "danger",
+              });
+            return false
+        }
+        if (!password) {
+            showMessage({
+                message: "Password is required",
+                type: "danger",
+              });
+            return false
+        }
+
         dispacth(AuthLogin({email:email,password:password}))
     }
-    
+
+    const showPassword = (value) => 
+    {
+        const key = value === false ? true : false
+        setShowKey(key)
+    }
   return (
     <>
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
@@ -28,18 +64,22 @@ const Login = ({navigation}) => {
             <Gap height={20}/>
             <Text style={styles.title}>Login to your existing account to access {'\n'} all the features in Zwallet.</Text>
             <Gap height={53}/>
-            <FormGroup icon="mail" placeholder="Enter your e-mail" value={email} onChangeText={e => setEmail(e) } />
+            <FormGroup icon="mail" placeholder="Enter your e-mail" value={email} error={errorHandling} onChangeText={e => form(e,password) } />
             <Gap height={60}/>
-            <FormGroup icon="password" placeholder="Enter your password" value={password} onChangeText={e => setPassword(e) }  secureTextEntry tes={() => alert('waw')} />
+            <FormGroup icon="password" placeholder="Enter your password" value={password}  onChangeText={e => form(email,e) }  secureTextEntry={showKey} error={errorHandling} showPassword={() => showPassword(showKey)} />
             <Gap height={15}/>
             <TouchableOpacity onPress={() => navigation.navigate('ResetPassword')} >
                 <Text style={styles.forgotPassword} >Forgot password?</Text>
             </TouchableOpacity>
-            <Gap height={75}/>
-            {/* <ButtonAuth title="Login" onPress={() => navigation.navigate('Dashboard')}/> */}
-            <ButtonAuth title="Login" onPress={() => onHandleLogin()}/>
+            {
+                errorHandling === true ? <Gap height={20}/> : <Gap height={75}/>
+            }
+            {
+               errorHandling == true && <Text style={{fontSize:16,color:'#FF5B37',textAlign:'center',marginBottom:27}}>Email or Password Invalid</Text>
+            }
+            <ButtonAuth active={active} title="Login" onPress={() => onHandleLogin()}/>
             <Gap height={25}/>
-            <LinkAuth title="Don’t have an account? Let’s " active="Sign Up" onPress={() => navigation.navigate('SignUp')}/>
+            <LinkAuth  title="Don’t have an account? Let’s " active="Sign Up" onPress={() => navigation.navigate('SignUp')}/>
             <Gap height={25}/>
         </View>
       </ScrollView>
@@ -47,7 +87,6 @@ const Login = ({navigation}) => {
     </>
   );
 };
-
 
 export default Login;
 
@@ -61,7 +100,7 @@ const styles = StyleSheet.create({
         textAlign:'center',
         fontSize:26,
         color:'#6379F4',
-        fontWeight:'bold'
+        fontFamily:'NunitoSans-Bold'
     },
     container:{
         backgroundColor:'#fff',
@@ -75,14 +114,16 @@ const styles = StyleSheet.create({
     heading:{
         fontSize:24,
         color: '#3A3D42',
-        fontWeight:'bold',
-        textAlign:'center'
+        textAlign:'center',
+        fontFamily:'NunitoSans-Bold'
     },
     title:{
         textAlign:'center',
         color:'rgba(58, 61, 66, 0.6)',
         fontSize:16,
-        lineHeight:23
+        lineHeight:23,
+        fontFamily:'NunitoSans-Reguler'
+        
     },
     forgotPassword:{
         textAlign:'right',

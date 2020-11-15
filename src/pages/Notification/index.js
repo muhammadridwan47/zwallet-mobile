@@ -14,8 +14,8 @@ export default function Notification({navigation,route}) {
         API.HistoryHome().then(res => {
             setTransaction(res.data)
         })
-        console.log(transaction)
-        console.log('dari params: ',id)
+        // console.log(transaction)
+        // console.log('dari params: ',id)
     },[])
     
     return (

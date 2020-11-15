@@ -13,23 +13,47 @@ export default function History({navigation,route}) {
     const [transaction,setTransaction] = useState([]);
     const [inCome,setInCome] = useState([]);
     const [outCome,setOutCome] = useState([]);
+    const [filter,setFilter] = useState([]);
     // calender 
     const [modal,setModal] = useState(false)
     const [selectedStartDate,setSelectedStartDate] = useState()
     const [selectedEndDate,setSelectedEndDate] = useState()
     const minDate = new Date(2017, 6, 3); // Today
-    const maxDate = new Date(2024, 6, 3);
+    const maxDate = new Date(2024, 6, 3); // last day
     const startDate  =  selectedStartDate ? selectedStartDate.toString() : '';
     const endDate = selectedEndDate ? selectedEndDate.toString() : '';
+    const [dateTime,setDate] = useState({start:'',end:''})
 
     const onDateChange = (date, type) => {
-
+        let arrbulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
         if (type === 'END_DATE') {
-          setSelectedEndDate(date)
+            if (date) {
+                const firstDate = `${date._i.day} ${arrbulan[date._i.month]} ${date._i.year}`   
+                setDate({start:`${date._i.year}-${date._i.month+1}-${date._i.day}`,end:dateTime.end}) 
+                setSelectedEndDate(firstDate)
+            }
         } else {
-          setSelectedStartDate(date)
+            if (date) {
+                const endDate = `${date._i.day} ${arrbulan[date._i.month]} ${date._i.year}`  
+
+                setDate({end:`${date._i.year}-${date._i.month+1}-${date._i.day}`,start:dateTime.start}) 
+                setSelectedStartDate(endDate)
+            }
+
           setSelectedEndDate(null)
         }
+      }
+    
+      const filterByDate = () =>
+      {
+          API.HistoryByDate(dateTime.end,dateTime.start).then(res => {
+              setTransaction(res.data.outMonth)
+          }).catch(err => {
+            //   console.log(err.data)
+              setTransaction([])
+          })
+
+          setModal(false)
       }
 
 
@@ -44,10 +68,6 @@ export default function History({navigation,route}) {
                 return data.receiver == id
             })
             setInCome(addMoney)
-        })
-        API.HistoryHome().then(res => {
-
-
         })
     },[])
     const reverseDataOut = () => 
@@ -143,17 +163,12 @@ export default function History({navigation,route}) {
                     </View>
                     </View>
                     <View style={{paddingHorizontal:16}}>
-                    <TouchableOpacity onPress={() => setModal(false)} style={{paddingVertical:16,backgroundColor:'#6379F4',borderRadius:12}}>
+                    <TouchableOpacity onPress={() => filterByDate()} style={{paddingVertical:16,backgroundColor:'#6379F4',borderRadius:12}}>
                         <Text style={{textAlign:'center',fontSize:18,fontWeight:'bold',color:'#fff'}}>Apply</Text>
                     </TouchableOpacity>
                     </View>
                 
                 </View>
-
-
-
-
-
           </View>
         </Modal>
         </>
@@ -173,7 +188,7 @@ const styles = StyleSheet.create({
     },
     menu:{
         flexDirection:'row',
-        backgroundColor:'rgb(250,252,255)',
+        backgroundColor:'transparent',
         paddingHorizontal:16,
         justifyContent:'space-between'
     },

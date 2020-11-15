@@ -20,8 +20,9 @@ const Auth = (state = initialState, action = {}) => {
     case 'LOGIN_ERROR':
       return {
         ...state,
-        loading: false,
         isLogin: false,
+        isStatus: false,
+        loading: false,
         data:[],
         error: action.payload
       };
@@ -30,6 +31,7 @@ const Auth = (state = initialState, action = {}) => {
         ...state,
         loading: false,
         isLogin: false,
+        isStatus: true,
         data:[],
         _persist: {
           rehydrated: true,

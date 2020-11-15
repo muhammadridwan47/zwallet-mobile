@@ -3,13 +3,17 @@ import Axios from 'axios'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { View, Text ,StyleSheet, ScrollView} from 'react-native'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux';
 import { GoBack } from '../../components'
 import { ButtonAuth, FormPin } from '../../elements'
 import { Gap, URI } from '../../utils'
+import { showMessage} from "react-native-flash-message";
+import { GetUsers } from '../../redux/actions/Users'
+import API from '../../service'
 
 
 export default function PinConfirmation({navigation }) {
+    const Auth = useSelector((s)=> s.Auth)
     const [data,setData] = useState([])
     const auth = useSelector((s)=> s.Auth)
     const [pin1,setPin1] = useState('')
@@ -20,6 +24,8 @@ export default function PinConfirmation({navigation }) {
     const [pin6,setPin6] = useState('')
     const pin = pin1+pin2+pin3+pin4+pin5+pin6;
     const [active,setActive] = useState(false)
+    const dispacth = useDispatch();
+
     useEffect(() => {
         AsyncStorage.getItem('dataTransfer').then(res => setData(JSON.parse(res)))
         pin.length == 6 ? setActive(true) : setActive(false)
@@ -27,6 +33,14 @@ export default function PinConfirmation({navigation }) {
     
     const onContinue = () => 
     {
+        if (!pin1||!pin2||!pin3||!pin4||!pin5||!pin6) {
+            showMessage({
+                message: "Pin is required",
+                type: "danger",
+            });
+            return false
+        }
+
         let form = {
             receiver: parseInt(data.idReceiver),
             status :'Transfer',
@@ -38,17 +52,30 @@ export default function PinConfirmation({navigation }) {
         const headers = { headers: {'Authorization': `${auth.data.token.token}`}}
         Axios.post(`${URI}/transaction/`,form,headers)
         .then(res => {
-           console.log(res)
+           dispacth(GetUsers({token:Auth?.data?.token?.token}))
+        //    console.log(res)
            setPin1('')
            setPin2('')
            setPin3('')
            setPin4('')
            setPin5('')
            setPin6('')
-           alert('transfer success')
+           API.FireBase(data.tokenFcm,data.name,data.amount)
+           .then(res => {
+                
+           })
+           .catch(err => {
+               
+           })
+          navigation.navigate('TransferSuccess')
+
         })
         .catch(err => {
-           console.log('error dari transfer',err)
+        //    console.log('error dari transfer',err)
+           showMessage({
+            message: "Pin invalid",
+            type: "danger",
+        });
         })
     }
     return (

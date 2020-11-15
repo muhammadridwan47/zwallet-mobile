@@ -2,7 +2,7 @@ import React,{useEffect} from 'react'
 import { useState } from 'react'
 import { View, Text,Image, ScrollView,StyleSheet, TouchableOpacity} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { Foto, IcBell,IcArrowUp,IcPlus } from '../../assets'
+import { IcBell,IcArrowUp,IcPlus } from '../../assets'
 import { LinkHistory } from '../../components'
 import { CardPerson } from '../../elements'
 import { GetTopUp } from '../../redux/actions/TopUp'
@@ -20,11 +20,8 @@ export default function Dashboard({navigation}) {
         User?.data?.data && setDashboard(User?.data?.data[0])
         API.HistoryHome().then(res => {
             setTransaction(res.data)
-            console.log('dari dashboard: ',res)
-            console.log('dari tran: ',transaction)
         })
-        console.log(dashboard)
-    },[User,transaction])
+    },[User,dashboard])
 
     const handleTopUp = () =>
     {
@@ -91,8 +88,6 @@ export default function Dashboard({navigation}) {
                         )
                     })
                 }
-
-        
             </ScrollView>
 
         </View>

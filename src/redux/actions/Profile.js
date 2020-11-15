@@ -130,7 +130,7 @@ export const AddPhoneNumberAction = (id,number) => {
 export const ChangePasswordAction = (id,newPassword) => {
     return (dispatch) =>{
         dispatch(ChangePasswordRequest())
-        console.log('ini dari add changepassword: ',id,newPassword)
+        // console.log('ini dari add changepassword: ',id,newPassword)
         // console.log('isi dari get user: ',fields.token.accessToken)
         let data = {
             password : newPassword

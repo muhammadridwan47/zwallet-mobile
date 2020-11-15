@@ -5,29 +5,72 @@ import { useSelector } from 'react-redux';
 import { GoBack } from '../../components';
 import { ButtonAuth, FormGroup } from '../../elements';
 import { Gap, URI } from '../../utils';
-
+import { showMessage} from "react-native-flash-message";
 export default function ChangePassword({navigation}) {
     const [currentPassword,setCurrentPassword] = useState('')
     const [newPassword,setNewPassword] = useState('')
     const [repeatNewPassword,SetRepeatNewPassword] = useState('')
+    const [active,SetActive] = useState(false)
     const Auth = useSelector((s)=> s.Auth)
+    const [showKey1,setShowKey1] = useState(true)
+    const [showKey2,setShowKey2] = useState(true)
+    const [showKey3,setShowKey3] = useState(true)
 
+    const showPassword1 = (value) => 
+    {
+        const key = value === false ? true : false
+        setShowKey1(key)
+    }
+    const showPassword2 = (value) => 
+    {
+        const key = value === false ? true : false
+        setShowKey2(key)
+    }
+    const showPassword3 = (value) => 
+    {
+        const key = value === false ? true : false
+        setShowKey3(key)
+    }
+    
+    const repeatPass = (e) => 
+    {
+        
+        e ? SetActive(true) : SetActive(false)
+        SetRepeatNewPassword(e)
+    }
     const handleChangePassword = () =>
     {
         if (!currentPassword) {
-            alert('Current password is Required')
+            showMessage({
+                message: "Current password is Required",
+                type: "danger",
+            });
             return false
         }
         if (!newPassword) {
-            alert('New password is Required')
+            showMessage({
+                message: "New password is Required",
+                type: "danger",
+            });
             return false
         }
         if (!repeatNewPassword) {
-            alert('repeart password is Required')
+            showMessage({
+                message: "repeart password is Required",
+                type: "danger",
+            });
             return false
         }
         if (repeatNewPassword === newPassword ) {
-        
+            
+            if (newPassword.length <= 7 ) {
+                showMessage({
+                    message: "password min length 8",
+                    type: "danger",
+                  });
+                return false
+            }
+
             let data = {
                 password : currentPassword,
                 newPassword : newPassword
@@ -35,16 +78,27 @@ export default function ChangePassword({navigation}) {
             const headers = { headers: {'Authorization': `${Auth.data.token.token}`}}    
             Axios.patch(`${URI}/user/change_password`,data,headers)
             .then(res => {
-              console.log(res.data)
+            //   console.log(res.data)
                     setCurrentPassword('')
                     setNewPassword('')
                     SetRepeatNewPassword('')
+                    showMessage({
+                        message: "The Password have been changed!",
+                        type: "success",
+                    });
             })
             .catch(err => {
-              console.log(err)
+              showMessage({
+                message: "Wrong Current password!",
+                type: "danger",
+            });
+            // console.log(err)
             });
         }else{
-            alert('repeart password and New passsword must be same!')
+            showMessage({
+                message: "repeart password and New passsword must be same!",
+                type: "danger",
+            });
             return false
         }
     }
@@ -58,15 +112,15 @@ export default function ChangePassword({navigation}) {
                  You must enter your current password and then type your new password twice.
             </Text>
             <Gap height={53}/>
-            <FormGroup icon="password" placeholder="Current Password" value={currentPassword} onChangeText={(e) => setCurrentPassword(e)}/>
+            <FormGroup icon="password" placeholder="Current Password" value={currentPassword} onChangeText={(e) => setCurrentPassword(e)} secureTextEntry={showKey1}  showPassword={() => showPassword1(showKey1)}/>
             <Gap height={60}/>
-            <FormGroup icon="password" placeholder="New Password" value={newPassword} onChangeText={(e) => setNewPassword(e)}/>
+            <FormGroup icon="password" placeholder="New Password" value={newPassword} onChangeText={(e) => setNewPassword(e)} secureTextEntry={showKey2}  showPassword={() => showPassword2(showKey2)}/>
             <Gap height={60}/>
-            <FormGroup icon="password" placeholder="Repeat Password" value={repeatNewPassword} onChangeText={(e) => SetRepeatNewPassword(e)}/>
+            <FormGroup icon="password" placeholder="Repeat Password" value={repeatNewPassword} onChangeText={(e) => repeatPass(e)} secureTextEntry={showKey3}  showPassword={() => showPassword3(showKey3)}/>
         </ScrollView>
         <View style={styles.wrapper}>
              <Gap height={40}/>
-                 <ButtonAuth title="Change Password" onPress={() => handleChangePassword()}/>
+                 <ButtonAuth title="Change Password" active={active} onPress={() => handleChangePassword()}/>
             <Gap height={20}/>
         </View>
         

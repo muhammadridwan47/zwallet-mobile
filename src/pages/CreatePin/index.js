@@ -40,7 +40,7 @@ const CreatePin = ({navigation}) => {
                     .then(res => {
                         navigation.navigate('PinSuccess')
                     }).catch(err => {
-                      console.log(err)
+                    //   console.log(err)
                     });
             })
 

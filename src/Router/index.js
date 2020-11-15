@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useSelector,useDispatch } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux';
+import messaging from '@react-native-firebase/messaging';
 import { 
     Splash,
     Login,
@@ -32,19 +33,46 @@ import { GetUsers } from '../redux/actions/Users';
 const Stack = createStackNavigator();
 
 
-
-export default function Router() {
+export default function Router({navigation}) {
     const Auth = useSelector((s)=> s.Auth)
     const dispacth = useDispatch();
+    const [loading, setLoading] = useState(true);
+    const [initialRoute, setInitialRoute] = useState('Dashboard');
     useEffect(() => {
         dispacth(GetUsers({token:Auth?.data?.token?.token}))
        
-    },[Auth])
 
+        // Assume a message-notification contains a "type" property in the data payload of the screen to open
+        messaging().onNotificationOpenedApp(remoteMessage => {
+            // console.log(
+            //   'Notification caused app to open from background state:',
+            //   remoteMessage.notification,
+            // );
+            navigation.navigate('SignUp');
+          });
+      
+          // Check whether an initial notification is available
+          messaging()
+            .getInitialNotification()
+            .then(remoteMessage => {
+              if (remoteMessage) {
+                // console.log(
+                //   'Notification caused app to open from quit state:',
+                //   remoteMessage.notification,
+                // );
+                setInitialRoute('SignUp'); // e.g. "Settings"
+              }
+              setLoading(false);
+            });    
+
+
+    },[Auth])
+    if (loading) {
+        return null;
+    }
 
     return (
-    //  <Stack.Navigator initialRouteName="Spalsh" >
-     <Stack.Navigator >
+     <Stack.Navigator initialRouteName={initialRoute} >
 
             {
                 Auth?.data?.token?.role ? (
@@ -74,7 +102,6 @@ export default function Router() {
                     </>
                 ) : (
                     <>
-                    <Stack.Screen name="Splash" component={Splash} options={{headerShown:false}} />
                     <Stack.Screen name="Login" component={Login} options={{headerShown:false}} />
                     <Stack.Screen name="SignUp" component={SignUp} options={{headerShown:false}} />
                     <Stack.Screen name="CreatePin" component={CreatePin} options={{headerShown:false}} />

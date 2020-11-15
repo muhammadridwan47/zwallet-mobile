@@ -28,12 +28,12 @@ export default function FindReceiver({navigation}) {
         const headers = { headers: {'Authorization': `${auth.data.token}`}}
         Axios.get(`${URI}/user/all?sortBy=fullName&sortType=ASC&limit=${limit}&page=0`,headers)
         .then(res =>{
-        //   console.log('transfer/',res.data.data)
+          console.log('transfer/',res.data.data)
             const result = res.data.data
             setProfiles(result);
         
         }).catch(err => {
-          console.log(err)
+        //   console.log(err)
         });
 
         Axios.get(`${URI}/user/all?sortBy=fullName&sortType=ASC&limit=999&page=0`,headers)
@@ -43,7 +43,7 @@ export default function FindReceiver({navigation}) {
             setMax(result.length);
         
         }).catch(err => {
-          console.log(err)
+        //   console.log(err)
         });
 
 
@@ -58,15 +58,15 @@ export default function FindReceiver({navigation}) {
             getData();
         }
         const headers = { headers: {'Authorization': `${auth.data.token.token}`}}  
-        console.log(auth.data.token.token)
+        // console.log(auth.data.token.token)
         Axios.get(`${URI}/user/all?search=${query}&sortBy=fullName&sortType=ASC&limit=${limit}&page=0`,headers)
         .then(res =>{
             const result = res.data.data
             setProfiles(result);
             setMax(result.length);
-            console.log('data search: ',result)
+            // console.log('data search: ',result)
         }).catch(err => {
-          console.log(err)
+        //   console.log(err)
         });
     }
 
@@ -79,14 +79,14 @@ export default function FindReceiver({navigation}) {
             setProfiles(result);
             setLimit(limit+4);
         }).catch(err => {
-          console.log(err)
+        //   console.log(err)
         });
 
     }
 
     const getTransferDetail = (id) =>
     {
-        console.log(id)
+        // console.log(id)
         dispatch(GetTransferById(id))
         navigation.navigate('AmountInput')
 

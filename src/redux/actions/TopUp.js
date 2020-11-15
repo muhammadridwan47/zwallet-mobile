@@ -30,12 +30,12 @@ export const GetTopUp = () => {
             return  axios.get(`${URI}/topup/all`,headers)
             .then((res)=> {
                 const data = res.data.data
-                console.log('hasil dari redux topup success: ',data)
+                // console.log('hasil dari redux topup success: ',data)
                 dispatch(TopUpSuccess(data))
             }).catch((err)=> {
                 const message = err.message
                 dispatch(TopUpError(message))
-                console.log('hasil dari redux topup error: ',message)
+                // console.log('hasil dari redux topup error: ',message)
             })
         })
 

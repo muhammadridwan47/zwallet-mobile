@@ -4,7 +4,7 @@ import React,{ useState } from 'react';
 import {Text, View,ScrollView,StyleSheet} from 'react-native';
 import { ButtonAuth, FormGroup} from '../../elements';
 import { Gap, URI } from '../../utils';
-
+import { showMessage} from "react-native-flash-message";
 const ResetPassword = () => {
   const [newPassword,setNewPassword] = useState()
   const [confirmPassword,setConfirmPassword] = useState()
@@ -12,15 +12,24 @@ const ResetPassword = () => {
   const handleResetPassword = () =>
   {
     if (!newPassword) {
-      alert('Field new password is required!')
+      showMessage({
+        message: "Field new password is required!",
+        type: "danger",
+      });
       return false
     }
     if (!confirmPassword) {
-      alert('Field confirm password is required!')
+      showMessage({
+        message: "Field confirm password is required!",
+        type: "danger",
+      });
       return false
     }
     if (newPassword !== confirmPassword ) {
-        alert('The password must be same!')
+        showMessage({
+          message: "The password must be same!",
+          type: "danger",
+        });
     }else{
       if (newPassword.length > 7 ) {
 
@@ -40,7 +49,10 @@ const ResetPassword = () => {
         })
 
       }else{
-        alert('password min length 8')
+        showMessage({
+          message: "password min length 8",
+          type: "danger",
+        });
       }
       
     }

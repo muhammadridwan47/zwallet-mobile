@@ -4,12 +4,15 @@ import { useState } from 'react';
 import {Text, View,ScrollView,StyleSheet} from 'react-native';
 import { ButtonAuth, FormGroup} from '../../elements';
 import { Gap } from '../../utils';
-
+import { showMessage} from "react-native-flash-message";
 const ResetPassword = ({navigation}) => {
     const [email,setEmail] = useState('') 
     const forgot = () => {
       if (!email) {
-        alert("Email is required!")
+        showMessage({
+          message: "Email is required",
+          type: "danger",
+        });
         return false
       }
       AsyncStorage.setItem('resetPassword',email)
@@ -55,7 +58,7 @@ const styles = StyleSheet.create({
         textAlign:'center',
         fontSize:26,
         color:'#6379F4',
-        fontWeight:'bold'
+        fontWeight:'bold',
     },
     container:{
         backgroundColor:'#fff',

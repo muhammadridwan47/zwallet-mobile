@@ -7,7 +7,7 @@ import { IcPhone } from '../../assets';
 import { useSelector,useDispatch } from 'react-redux';
 import Axios from 'axios';
 import { GetUsers } from '../../redux/actions/Users';
-
+import { showMessage} from "react-native-flash-message";
 
 export default function AddPhoneNumber({navigation}) {
     const [active,setActive] = useState(false)
@@ -24,7 +24,10 @@ export default function AddPhoneNumber({navigation}) {
     const addPhone = () =>
     {
         if (!phone) {
-            alert('Number Phone is Required')
+            showMessage({
+                message: "Number Phone is Required",
+                type: "danger",
+            });
             return false;
         }
         let data = {
@@ -37,7 +40,7 @@ export default function AddPhoneNumber({navigation}) {
             navigation.navigate('ManagePhoneNumber');
         })
         .catch(err => {
-          console.log('error dari delete phoneNumber',err)
+        //   console.log('error dari delete phoneNumber',err)
         });
 
     }

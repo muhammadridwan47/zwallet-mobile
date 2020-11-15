@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react'
 import { View, Text, StyleSheet,Image, ScrollView, TouchableOpacity,Button,Switch } from 'react-native'
 import { useSelector,useDispatch } from 'react-redux';
-import { ImProfilePage,IcEditProfile, IcArrowRight,IcAddImage } from '../../assets';
+import { IcEditProfile, IcArrowRight,IcAddImage } from '../../assets';
 import { GoBack} from '../../components'
 import { AuthLogout } from '../../redux/actions/Auth';
 import { Gap } from '../../utils';
@@ -10,6 +10,7 @@ import Modal from 'react-native-modal';
 import { FormGroup } from '../../elements';
 import API from '../../service';
 import { GetUsers } from '../../redux/actions/Users';
+import { showMessage} from "react-native-flash-message";
 
 
 export default function Profile({navigation}) {
@@ -43,7 +44,10 @@ export default function Profile({navigation}) {
     {
         ImagePicker.launchImageLibrary({}, (response) => {
             if (response.didCancel || response.error) {
-                alert("oops, you don't chouse image!")
+                showMessage({
+                    message: "oops, you don't chouse image!",
+                    type: "danger",
+                });
             }else{
                 let image = `data:${response.type};base64,${response.data}`
                 setPhoto(image)
@@ -58,6 +62,10 @@ export default function Profile({navigation}) {
         API.UploadImage(data)
         .then(res=>{
             dispacth(GetUsers({token:Auth?.data?.token?.token}))
+            showMessage({
+                message: "Success change image",
+                type: "success",
+            });
         })
         setFullName('')
         setModal(false)
