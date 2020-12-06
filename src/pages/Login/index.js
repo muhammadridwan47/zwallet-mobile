@@ -7,8 +7,8 @@ import { useSelector,useDispatch } from 'react-redux';
 import { AuthLogin } from '../../redux/actions/Auth';
 import { showMessage} from "react-native-flash-message";
 const Login = ({navigation}) => {
-    const [email,setEmail] = useState('angga@gmail.com')
-    const [password,setPassword] = useState('12345678')
+    const [email,setEmail] = useState('')
+    const [password,setPassword] = useState('')
     const [showKey,setShowKey] = useState(true)
     const [errorHandling,setError] = useState(false)
     const [active,setActive] = useState(false)
