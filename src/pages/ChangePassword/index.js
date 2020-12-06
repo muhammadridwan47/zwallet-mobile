@@ -1,17 +1,15 @@
-import Axios from 'axios';
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
-import { useSelector } from 'react-redux';
 import { GoBack } from '../../components';
 import { ButtonAuth, FormGroup } from '../../elements';
-import { Gap, URI } from '../../utils';
+import { Gap } from '../../utils';
 import { showMessage} from "react-native-flash-message";
+import API from '../../service';
 export default function ChangePassword({navigation}) {
     const [currentPassword,setCurrentPassword] = useState('')
     const [newPassword,setNewPassword] = useState('')
     const [repeatNewPassword,SetRepeatNewPassword] = useState('')
     const [active,SetActive] = useState(false)
-    const Auth = useSelector((s)=> s.Auth)
     const [showKey1,setShowKey1] = useState(true)
     const [showKey2,setShowKey2] = useState(true)
     const [showKey3,setShowKey3] = useState(true)
@@ -75,10 +73,8 @@ export default function ChangePassword({navigation}) {
                 password : currentPassword,
                 newPassword : newPassword
             }
-            const headers = { headers: {'Authorization': `${Auth.data.token.token}`}}    
-            Axios.patch(`${URI}/user/change_password`,data,headers)
+            API.changePassword(data)
             .then(res => {
-            //   console.log(res.data)
                     setCurrentPassword('')
                     setNewPassword('')
                     SetRepeatNewPassword('')
@@ -91,8 +87,7 @@ export default function ChangePassword({navigation}) {
               showMessage({
                 message: "Wrong Current password!",
                 type: "danger",
-            });
-            // console.log(err)
+              });
             });
         }else{
             showMessage({

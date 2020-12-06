@@ -11,7 +11,8 @@ import { FormGroup } from '../../elements';
 import API from '../../service';
 import { GetUsers } from '../../redux/actions/Users';
 import { showMessage} from "react-native-flash-message";
-
+import { URIIMAGE } from '../../utils/URI';
+import messaging from '@react-native-firebase/messaging';
 
 export default function Profile({navigation}) {
     const User = useSelector((s)=> s.Users)
@@ -28,11 +29,7 @@ export default function Profile({navigation}) {
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
     useEffect(() => {
-        logout && User?.data?.data[0] && setProfileData(User?.data?.data[0])
-        return () => {
-            logout && User?.data?.data[0] && setProfileData(User?.data?.data[0])
-        }
-        
+        logout && User?.data && setProfileData(User?.data)
     }, [User])
 
     const handleLogout = () => 
@@ -42,34 +39,54 @@ export default function Profile({navigation}) {
     }
     const ImageLibrary = () => 
     {
-        ImagePicker.launchImageLibrary({}, (response) => {
+        ImagePicker.showImagePicker({}, (response) => {
             if (response.didCancel || response.error) {
                 showMessage({
                     message: "oops, you don't chouse image!",
                     type: "danger",
                 });
             }else{
-                let image = `data:${response.type};base64,${response.data}`
-                setPhoto(image)
+                const formData = new FormData()
+                formData.append('images',{
+                    uri: response.uri,
+                    name: response.fileName,
+                    type: response.type
+                })   
+                formData.append(
+                    'fullName', !fullName ? profileData?.fullName : fullName,
+                )  
+                API.UploadImage(formData).then(res => {
+                    let image = `data:${response.type};base64,${response.data}`
+                    setPhoto(image)
+                    dispacth(GetUsers({token:Auth?.data?.token?.token}))
+                    setFullName('')
+                    showMessage({
+                        message: "Success change image",
+                        type: "success",
+                    });
+                   setModal(false)
+                })
+                .catch(err => {
+                    alert('gagal')
+                    setModal(false)
+                })
+               
             }
         });
     }
-    const handleUpload = () => 
-    {   
-        const name = !fullName ? profileData?.fullName : fullName
-        const img = !photo ? profileData?.img : photo
-        let data = {img:img,fullName:name}
-        API.UploadImage(data)
-        .then(res=>{
-            dispacth(GetUsers({token:Auth?.data?.token?.token}))
-            showMessage({
-                message: "Success change image",
-                type: "success",
-            });
-        })
-        setFullName('')
-        setModal(false)
+   
+    const switchChange = (value) =>
+    {
+        if (value === false) {
+            API.FCM({tokenFcm:'-'})
+        }else{
+            messaging().getToken().then(token => {
+                API.FCM({tokenFcm:token})
+            })
+        }
+        setIsEnabled(value)
     }
+
     return (
     <>
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -78,7 +95,7 @@ export default function Profile({navigation}) {
             <Gap height={24}/>
             <View style={styles.wrapper}>
                 {
-                    !profileData?.img ? <IcAddImage/> : <Image style={styles.image} source={{uri:profileData?.img}}/>
+                    profileData?.img == '-' ? <Image style={styles.image} source={{uri:'https://www.abc.net.au/cm/rimage/12049340-16x9-xlarge.png?v=2'}}/> : <Image style={styles.image} source={{uri:URIIMAGE+profileData?.img}}/>
                 }
                 <Gap height={10}/>
                 <TouchableOpacity style={styles.edit} onPress={() => setModal(true)}>
@@ -113,6 +130,7 @@ export default function Profile({navigation}) {
                     onValueChange={toggleSwitch}
                     style={{height:26,width:48}}
                     value={isEnabled}
+                    onValueChange={value => switchChange(value)}
                 />
             </View>
             <Gap height={25}/>
@@ -133,8 +151,6 @@ export default function Profile({navigation}) {
                     <FormGroup icon="username" placeholder="Your Name" value={fullName} onChangeText={e => setFullName(e) }  />
                 </View>
             </ScrollView>
-            <Button title="Upload" onPress={() => handleUpload()} />
-            <Gap height={10}/>
             <Button title="close" onPress={() => setModal(false)} />
           </View>
         </Modal>

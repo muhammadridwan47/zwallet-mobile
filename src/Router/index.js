@@ -40,8 +40,6 @@ export default function Router({navigation}) {
     const [initialRoute, setInitialRoute] = useState('Dashboard');
     useEffect(() => {
         dispacth(GetUsers({token:Auth?.data?.token?.token}))
-       
-
         // Assume a message-notification contains a "type" property in the data payload of the screen to open
         messaging().onNotificationOpenedApp(remoteMessage => {
             // console.log(

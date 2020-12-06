@@ -1,12 +1,12 @@
 import React, { useState,useEffect } from 'react'
 import { View, Text, StyleSheet, TextInput, ScrollView, Image,TouchableOpacity } from 'react-native'
 import { GoBack } from '../../components'
-import { IcSearch,Receiver } from '../../assets'
+import { IcSearch} from '../../assets'
 import { Gap, URI } from '../../utils'
 import { CardPerson, CardQuickAccess } from '../../elements'
 import { useSelector,useDispatch } from 'react-redux'
-import Axios from 'axios'
 import { GetTransferById } from '../../redux/actions/Transfer'
+import API from '../../service'
 
 export default function FindReceiver({navigation}) {
     const [quickAccess,setQuickAccess] = useState([])
@@ -14,79 +14,47 @@ export default function FindReceiver({navigation}) {
     const [limit,setLimit] = useState(6)
     const [max,setMax] = useState(0)
     const dataQuickAccess = useSelector((s)=> s.Transfer)
-    const auth = useSelector((s)=> s.Auth)
     const dispatch = useDispatch()
 
     useEffect(() => {
         getData()
-    },[quickAccess,dataQuickAccess])
-
-
+    },[])
     const getData = () =>
     {
         dataQuickAccess?.data && setQuickAccess(dataQuickAccess?.data)
-        const headers = { headers: {'Authorization': `${auth.data.token}`}}
-        Axios.get(`${URI}/user/all?sortBy=fullName&sortType=ASC&limit=${limit}&page=0`,headers)
-        .then(res =>{
-          console.log('transfer/',res.data.data)
-            const result = res.data.data
-            setProfiles(result);
-        
-        }).catch(err => {
-        //   console.log(err)
-        });
-
-        Axios.get(`${URI}/user/all?sortBy=fullName&sortType=ASC&limit=999&page=0`,headers)
-        .then(res =>{
-        //   console.log('transfer/',res.data.data)
-            const result = res.data.data
-            setMax(result.length);
-        
-        }).catch(err => {
-        //   console.log(err)
-        });
-
-
+        API.GetDataTransfer(limit)
+        .then(res => {
+            setProfiles(res);
+        })
+        API.MaxData()
+        .then(result => {
+            setMax(result);
+        })
     }
-
-
-
-
    const onHandleInput = query =>
     {
         if (!query) {
             getData();
         }
-        const headers = { headers: {'Authorization': `${auth.data.token.token}`}}  
-        // console.log(auth.data.token.token)
-        Axios.get(`${URI}/user/all?search=${query}&sortBy=fullName&sortType=ASC&limit=${limit}&page=0`,headers)
-        .then(res =>{
-            const result = res.data.data
-            setProfiles(result);
-            setMax(result.length);
-            // console.log('data search: ',result)
-        }).catch(err => {
-        //   console.log(err)
-        });
-    }
-
-
-    const fetchMoreData = () => {
-        const headers = { headers: {'Authorization': `${auth.data.token.token}`}}  
-        Axios.get(`${URI}/user/all?sortBy=fullName&sortType=ASC&limit=${limit + 4}&page=0`,headers)
-        .then(res =>{
-            const result = res.data.data
+        API.SearchReceiver(query,limit)
+        .then(result => {
             setProfiles(result);
             setLimit(limit+4);
-        }).catch(err => {
-        //   console.log(err)
-        });
+            setMax(result.length);
+        })
 
+    }
+
+    const fetchMoreData = () => {
+        API.MoreData(limit)
+        .then(result => {
+            setProfiles(result);
+            setLimit(limit+4);
+        })
     }
 
     const getTransferDetail = (id) =>
     {
-        // console.log(id)
         dispatch(GetTransferById(id))
         navigation.navigate('AmountInput')
 

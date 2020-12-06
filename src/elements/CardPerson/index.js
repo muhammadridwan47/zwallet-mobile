@@ -3,33 +3,76 @@ import { View, Text, StyleSheet,Image } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { ProfileCard } from '../../assets'
 import { Gap } from '../../utils'
+import { URIIMAGE } from '../../utils/URI'
 
 export default function CardPerson({phoneNumber,transfer,name,amount,onPress,img,idReceiver,idProfile,admin}) {
-   
-    return (
-        <TouchableOpacity activeOpacity={0.8} style={styles.cardPerson} onPress={() => onPress()} >
-            <View style={styles.cardPersonWrapper}>
-                <View style={styles.imageCard}>
-                    <Image source={{uri:img}} style={styles.image} />
-                    <Gap width={15}/>
-                    <View>
-                        <Text style={styles.cardName}>{name}</Text>
-                        <Text style={styles.cardTitle}>{phoneNumber && phoneNumber}{transfer && transfer}</Text>
-                    </View>
-                </View>
-                {
-                    admin ? (
-                        <Text style={styles.cardMoneyAdmin}>Rp{amount}</Text>
+    
+    
+         const Card = () => {
+             if (onPress) {
+                    return (
+                        <TouchableOpacity activeOpacity={0.8} style={styles.cardPerson} onPress={() => onPress()} >
+                    
+                        <View style={styles.cardPersonWrapper}>
+                            <View style={styles.imageCard}>
+                                {
+                                img == '-' ? <Image source={{uri:'https://www.abc.net.au/cm/rimage/12049340-16x9-xlarge.png?v=2'}} style={styles.image} /> : <Image source={{uri:URIIMAGE+img}} style={styles.image} />
+                                }
+                                <Gap width={15}/>
+                                <View>
+                                    <Text style={styles.cardName}>{name}</Text>
+                                    <Text style={styles.cardTitle}>{phoneNumber && phoneNumber}{transfer && transfer}</Text>
+                                </View>
+                            </View>
+                            {
+                                admin ? (
+                                    <Text style={styles.cardMoneyAdmin}>Rp{amount}</Text>
+                                )
+                                :
+                                (
+                                    !phoneNumber ? idProfile !== idReceiver ? <Text style={styles.cardMoneyMin}>-Rp{amount}</Text> : <Text style={styles.cardMoneyPlus}>+Rp{amount}</Text> :<Text></Text>
+            
+                                )
+                            }
+                            
+                            </View>    
+                      </TouchableOpacity>
                     )
-                    :
-                    (
-                        !phoneNumber ? idProfile !== idReceiver ? <Text style={styles.cardMoneyMin}>-Rp{amount}</Text> : <Text style={styles.cardMoneyPlus}>+Rp{amount}</Text> :<Text></Text>
-
-                    )
-                }
+              }else{
+                return (
+                    <View  style={styles.cardPerson} >
                 
-            </View>    
-        </TouchableOpacity>
+                    <View style={styles.cardPersonWrapper}>
+                        <View style={styles.imageCard}>
+                            {
+                            img == '-' ? <Image source={{uri:'https://www.abc.net.au/cm/rimage/12049340-16x9-xlarge.png?v=2'}} style={styles.image} /> : <Image source={{uri:URIIMAGE+img}} style={styles.image} />
+                            }
+                            <Gap width={15}/>
+                            <View>
+                                <Text style={styles.cardName}>{name}</Text>
+                                <Text style={styles.cardTitle}>{phoneNumber && phoneNumber}{transfer && transfer}</Text>
+                            </View>
+                        </View>
+                        {
+                            admin ? (
+                                <Text style={styles.cardMoneyAdmin}>Rp{amount}</Text>
+                            )
+                            :
+                            (
+                                !phoneNumber ? idProfile !== idReceiver ? <Text style={styles.cardMoneyMin}>-Rp{amount}</Text> : <Text style={styles.cardMoneyPlus}>+Rp{amount}</Text> :<Text></Text>
+        
+                            )
+                        }
+                        
+                        </View>    
+                  </View>
+                )
+              }
+
+        }
+
+    return (
+        <Card />
     )
 }
 

@@ -1,11 +1,11 @@
-import Axios from 'axios';
 import React, { useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { useSelector } from 'react-redux';
 import { GoBack } from '../../components';
 import { ButtonAuth, FormPin } from '../../elements';
-import { Gap, URI } from '../../utils';
+import { Gap } from '../../utils';
 import { showMessage} from "react-native-flash-message";
+import API from '../../service';
 
 export default function ChangePin({navigation}) {
     const [pin1,setPin1] = useState('')
@@ -54,8 +54,7 @@ export default function ChangePin({navigation}) {
                         pin :oldPin,
                         newPin:pin
                     }
-                    const headers = { headers: {'Authorization': `${Auth.data.token.token}`}}   
-                    Axios.patch(`${URI}/user/change_pin`,save,headers)
+                    API.changePin(save)
                     .then(res => {
                         // console.log(res.data)
                         setPin1('')

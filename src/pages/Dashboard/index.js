@@ -2,27 +2,42 @@ import React,{useEffect} from 'react'
 import { useState } from 'react'
 import { View, Text,Image, ScrollView,StyleSheet, TouchableOpacity} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { IcBell,IcArrowUp,IcPlus } from '../../assets'
+import { IcBell,IcArrowUp,IcPlus, IcAddImage } from '../../assets'
 import { LinkHistory } from '../../components'
 import { CardPerson } from '../../elements'
 import { GetTopUp } from '../../redux/actions/TopUp'
 import { GetTransfer } from '../../redux/actions/Transfer'
 import API from '../../service'
 import { Gap} from '../../utils'
+import { SOCKETURI, URIIMAGE } from '../../utils/URI'
+import { io } from 'socket.io-client'
 
 export default function Dashboard({navigation}) {
-    const User = useSelector((s)=> s.Users)
+    const {data} = useSelector((s)=> s.Users)
     const [dashboard,setDashboard] = useState([]);
     const [transaction,setTransaction] = useState([]);
+    const [balance,setBalance] = useState('');
     const dispacth = useDispatch();
-
+    // const socket = io(SOCKETURI)
+    
     useEffect(() => {
-        User?.data?.data && setDashboard(User?.data?.data[0])
         API.HistoryHome().then(res => {
             setTransaction(res.data)
         })
-    },[User,dashboard])
-
+        // socket.emit('initial-user', dashboard?.id)
+        // User?.data?.data && socket.emit('initial-user', User?.data?.data[0].id)
+        // User?.data?.data && socket.on('get-data',(data) => {
+        //     setBalance(data)                
+        // })
+     
+    },[])
+    // useEffect(() => {
+    //     return () => {
+    //         socket.off('get-data')
+    //         // socket.off('initial-user')
+    //     }
+    // },[])
+    
     const handleTopUp = () =>
     {
         dispacth(GetTopUp())
@@ -40,11 +55,14 @@ export default function Dashboard({navigation}) {
                 <View style={styles.wrapperContent}>
                     <View style={styles.Profile}>
                         <TouchableOpacity style={styles.profileWrapper} onPress={()=> navigation.navigate('Profile')}>
-                            <Image source={{uri:dashboard?.img}}  style={styles.image}/>
+                            {
+                                data?.img === '-' ? <Image style={styles.image} source={{uri:'https://www.abc.net.au/cm/rimage/12049340-16x9-xlarge.png?v=2'}}/> : <Image style={styles.image} source={{uri:URIIMAGE+data?.img}}/>
+                            }
                             <Gap width={20}/>
                             <View>
                                 <Text style={styles.profileTitle}>Hello,</Text>
-                                <Text style={styles.profileName}>{dashboard?.fullName}</Text>
+                                {/* <Text style={styles.profileName}>{dashboard?.fullName}</Text> */}
+                                <Text style={styles.profileName}>{data?.fullName}</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={()=> navigation.navigate('Notification',{id:dashboard?.id})}>
@@ -56,9 +74,10 @@ export default function Dashboard({navigation}) {
                     <TouchableOpacity activeOpacity={0.8} style={styles.creditWrapper} onPress={()=> navigation.navigate('DetailTransaction',{id:dashboard?.id})}>
                         <Text style={styles.creditBalance}>Balance</Text>
                         <Gap height={10} />
-                        <Text style={styles.credit}>Rp{dashboard?.balance}</Text>
+                        {/* <Text style={styles.credit}>Rp{balance}</Text> */}
+                        <Text style={styles.credit}>Rp{data?.balance}</Text>
                         <Gap height={10} />
-                        <Text style={styles.phoneNumber}>{dashboard?.phoneNumber && '+'+dashboard?.phoneNumber}</Text>
+                        <Text style={styles.phoneNumber}>{data?.phoneNumber && '+'+data?.phoneNumber}</Text>
                     </TouchableOpacity>
                     <Gap height={30} />
                     <View style={styles.wrapperButton}>

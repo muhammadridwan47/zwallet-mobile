@@ -47,12 +47,7 @@ const TransferErrorById = (error)=> {
     }
 }
 
-// const TransferTemporary = (data)=> {
-//     return{
-//         type: 'TRANSFER_TEMPORARY',
-//         payload: data
-//     }
-// }
+
 
 
 // Get data transfer by ID  
@@ -91,17 +86,19 @@ const GetTransferTemporary = (data) => {
     }
 }
 
-
 const GetTransferById = (id) => {
     return (dispatch) =>{
+        dispatch({type:'LOADING'})
         dispatch(TransferRequestById())
         AsyncStorage.getItem('token').then(token => {
             const headers = { headers: {'Authorization': `${token}`}}
             return axios.get(`${URI}/user/getuser?id=${id}`,headers)
             .then((res)=> {
+                dispatch({type:'LOADING_STOP'})
                 const result = res.data.data[0];
                 dispatch(TransferSuccessById(result))
             }).catch((err)=> {
+                dispatch({type:'LOADING_STOP'})
                 const message = err.message
                 dispatch(TransferErrorById(message))
             })
@@ -130,37 +127,36 @@ const GetTransfer = () => {
  const GetTransferSearch = (query) => {
     return (dispatch) =>{
         dispatch(TransferRequest())
+        const email = AsyncStorage.getItem("token");
+        AsyncStorage.getItem('token').then(token => {
+            const headers = { headers: {'Authorization': `${token}`}}
+            return axios.get(`${URI}/profile/detail?search=${query.query}`,headers)
+            .then((res)=> {
+                const result = res.data.data.filter(man => {
+                    return man.email !== email
+            })
 
-        const token = JSON.parse(localStorage.getItem("token"));
-        // console.log('isi dari search : ',query.query)
-        const email = localStorage.getItem("login");
-        const headers = { headers: {'Authorization': `Bearer ${token.accessToken}`}}
-        return axios.get(`${process.env.REACT_APP_API}/profile/detail?search=${query.query}`,headers)
-        .then((res)=> {
-            const result = res.data.data.filter(man => {
-                return man.email !== email
-           })
-
-            dispatch(TransferSuccess(result))
-        }).catch((err)=> {
-            const message = err.message
-            dispatch(TransferError(message))
+                dispatch(TransferSuccess(result))
+            }).catch((err)=> {
+                const message = err.message
+                dispatch(TransferError(message))
+            })
         })
     }
 }
 
  const TransferSend = (form) => {
     return (dispatch) =>{
-        // console.log('dari action send: ',form)
         dispatch(TransferSendRequest())
-        const token = JSON.parse(localStorage.getItem("token"));
-        const headers = { headers: {'Authorization': `Bearer ${token.accessToken}`}} 
-        axios.post(`${process.env.REACT_APP_API}/transfer`,form,headers)
-        .then((res)=> {
-            dispatch(TransferSendSuccess(res))
-        }).catch((err)=> {
-            const message = err.message
-            dispatch(TransferSendError(message))
+        AsyncStorage.getItem('token').then(token => {
+            const headers = { headers: {'Authorization': `${token}`}} 
+            axios.post(`${process.env.REACT_APP_API}/transfer`,form,headers)
+            .then((res)=> {
+                dispatch(TransferSendSuccess(res))
+            }).catch((err)=> {
+                const message = err.message
+                dispatch(TransferSendError(message))
+            })
         })
     }
 }

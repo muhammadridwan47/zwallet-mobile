@@ -3,6 +3,12 @@ const initialState = {
   loading: false,
 };
 
+const regsiterState = {
+  data: [],
+  status: false,
+  error:''
+};
+
 const Auth = (state = initialState, action = {}) => {
   switch (action.type) {
     case 'LOGIN_REQUEST':
@@ -43,25 +49,23 @@ const Auth = (state = initialState, action = {}) => {
   }
 };
 
-export const SignUp = (state = initialState, action = {}) => {
+export const SignUp = (state = regsiterState, action = {}) => {
   switch (action.type) {
     case 'REGISTER_REQUEST':
       return {
         ...state,
-        loading: true,
+        loading: false,
       };
     case 'REGISTER_SUCCESS':
       return {
         ...state,
-        loading: false,
-        isLogin: true,
+        status: true,
         data: action.payload
       };
     case 'REGISTER_ERROR':
       return {
         ...state,
-        loading: false,
-        isLogin: false,
+        status: false,
         data:[],
         error: action.payload
       };

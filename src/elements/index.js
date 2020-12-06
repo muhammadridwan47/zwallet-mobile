@@ -6,6 +6,7 @@ import CardQuickAccess from './CardQuickAccess'
 import CardInformation from './CardInformation'
 import CardTopUp from './CardTopUp'
 import NotificationCard from './NotificationCard'
+import LoadingShow from './LoadingShow'
 
 
 export {
@@ -16,5 +17,6 @@ export {
     CardQuickAccess,
     CardInformation,
     CardTopUp,
-    NotificationCard
+    NotificationCard,
+    LoadingShow
 }

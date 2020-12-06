@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Axios from 'axios';
 import React,{ useState } from 'react';
 import {Text, View,ScrollView,StyleSheet} from 'react-native';
 import { ButtonAuth, FormGroup} from '../../elements';
-import { Gap, URI } from '../../utils';
+import { Gap } from '../../utils';
 import { showMessage} from "react-native-flash-message";
+import API from '../../service';
 const ResetPassword = () => {
   const [newPassword,setNewPassword] = useState()
   const [confirmPassword,setConfirmPassword] = useState()
@@ -38,11 +38,14 @@ const ResetPassword = () => {
             email: res,
             password: confirmPassword,
           }
-          Axios.patch(`${URI}/auth/reset_password`,data)
+          API.resetPassword(data)
           .then(res => {
             setConfirmPassword('')
             setNewPassword('')
-            alert('Reset password successfully')
+            showMessage({
+              message: "Password have been changed",
+              type: "success",
+            });
           }).catch(err => {
             console.error(err)
           });

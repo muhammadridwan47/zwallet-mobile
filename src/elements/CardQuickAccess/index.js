@@ -1,11 +1,11 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
-import { Receiver } from '../../assets'
+import { Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { URIIMAGE } from '../../utils/URI'
 
 export default function CardQuickAccess({fullName,number,onPress,img}) {
     return (
         <TouchableOpacity  style={styles.QuickAccess} onPress={() => onPress()}>
-            <Image source={{uri:img}} style={{width:56,height:56,borderRadius:10}} />
+            <Image source={{uri:URIIMAGE+img}} style={{width:56,height:56,borderRadius:10}} />
             <Text style={styles.QuickAccessName} numberOfLines={1}>{fullName}</Text>
             <Text style={styles.QuickAccessNumber} numberOfLines={1}>{number}</Text>
         </TouchableOpacity>

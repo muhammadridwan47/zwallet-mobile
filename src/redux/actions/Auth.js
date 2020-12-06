@@ -4,7 +4,6 @@ import { URI } from '../../utils'
 import messaging from '@react-native-firebase/messaging';
 import API from '../../service'
 
-
 const AuthLoginRequest = ()=> {
     return{
         type: 'LOGIN_REQUEST'
@@ -46,23 +45,33 @@ const AuthRegisterError = (error)=> {
 
 
 export const AuthLogin = (fields) => {
-    // console.log('isi dari redux login dispatch ',fields)
     return (dispatch) =>{
         dispatch(AuthLoginRequest())
+        dispatch({type:'LOADING'})
         return Axios({
             method: 'POST',
             data: fields,
             url: `${URI}/auth/login`
         }).then((res)=> {
-            // console.log('berhasil redux login dispatch',res.data)
+            dispatch({type:'LOADING_STOP'})
             const data = res.data
             AsyncStorage.setItem('token',res.data.token.token)
-            dispatch(AuthLoginSuccess(data))
             messaging().getToken().then(token => {
+            if (data.token.fcm == '-') {
                 API.FCM({tokenFcm:token})
+                dispatch(AuthLoginSuccess(data))
+            }else{
+                if (token == data.token.fcm) {
+                    dispatch(AuthLoginSuccess(data))
+                }else{
+                    API.FCM({tokenFcm:'-'})
+                    dispatch(AuthLoginError('token fcm invalid'))
+                }
+            }
             })
-        }).catch((err)=> {
-            // console.log('gagal redux login dispatch')
+        })
+        .catch((err)=> {
+            dispatch({type:'LOADING_STOP'})
             dispatch(AuthLoginError(err))
         })
     }
@@ -72,15 +81,19 @@ export const AuthLogin = (fields) => {
 
 export const SignUpAction = (data) => {
     return (dispatch) =>{
+        dispatch({type:'LOADING'})
         dispatch(AuthRegisterRequest())
         return Axios({
             method: 'POST',
             data: data,
             url: `${URI}/auth/register`
         }).then((res)=> {
+            dispatch({type:'LOADING_STOP'})
+            
             const data = res.data
                  dispatch(AuthRegisterSuccess(data))
         }).catch((err)=> {
+            dispatch({type:'LOADING_STOP'})
             const message = err.message
             dispatch(AuthRegisterError(message))
             // console.log(message)
@@ -90,6 +103,7 @@ export const SignUpAction = (data) => {
 
 
 export const AuthLogout = ()=> {
+    API.FCM({tokenFcm:'-'})
     return{
         type: 'LOGOUT',
     }

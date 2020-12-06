@@ -8,11 +8,12 @@ import { Gap } from '../../utils'
 
 
 export default function Confirmation({navigation}) {
-    // const data = route.params;
     const [data,setData] = useState([])
     useEffect(() => {
-        AsyncStorage.getItem('dataTransfer').then(res => setData(JSON.parse(res)))
-    }, [data])
+        AsyncStorage.getItem('dataTransfer').then(res => {
+            setData(JSON.parse(res))
+        })
+    }, [])
     return (
         <>
         <View style={styles.container}>

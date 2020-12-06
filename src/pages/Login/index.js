@@ -15,9 +15,7 @@ const Login = ({navigation}) => {
     const dispacth = useDispatch();
     const Auth = useSelector((s)=> s.Auth)
     useEffect(() => {
-
              Auth.isStatus === false ? setError(true) : setError(false)
-            // console.log('hasil dari auth: ',Auth)
     },[Auth])
 
     const form = (eml,pass) =>

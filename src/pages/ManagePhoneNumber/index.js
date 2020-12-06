@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet} from 'react-native'
 import { GoBack } from '../../components';
 import {CardInformation } from '../../elements';
-import { Gap, URI } from '../../utils';
+import { Gap} from '../../utils';
 import { useSelector,useDispatch } from 'react-redux';
-import Axios from 'axios';
 import { GetUsers } from '../../redux/actions/Users';
+import API from '../../service';
 
 
 export default function ManagePhoneNumber({navigation}) {
@@ -15,10 +15,9 @@ export default function ManagePhoneNumber({navigation}) {
     const [profileData,setProfileData] = useState([]);
 
     useEffect(() => {
-        User?.data?.data[0] && setProfileData(User?.data?.data[0])
+        User?.data && setProfileData(User?.data)
         return () => {
-            User?.data?.data[0] && setProfileData(User?.data?.data[0])
-
+            User?.data && setProfileData(User?.data)
         }
     }, [User,profileData])
     const phone = () => 
@@ -26,8 +25,7 @@ export default function ManagePhoneNumber({navigation}) {
         let data = {
             phoneNumber : 0
         }
-        const headers = { headers: {'Authorization': `${Auth.data.token.token}`}}   
-        Axios.patch(`${URI}/user/patch_user`,data,headers)
+        API.deletePhoneNumber(data)
         .then(res => {
              dispacth(GetUsers({token:Auth?.data?.token?.token}))
              navigation.navigate('AddPhoneNumber')

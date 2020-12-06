@@ -59,5 +59,4 @@ export {
     IcMailWrong,
     IcPasswordWrong,
     IcPersonWrong
-    
 }

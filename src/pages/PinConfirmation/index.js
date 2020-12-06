@@ -1,21 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import Axios from 'axios'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { View, Text ,StyleSheet, ScrollView} from 'react-native'
 import { useSelector,useDispatch } from 'react-redux';
 import { GoBack } from '../../components'
 import { ButtonAuth, FormPin } from '../../elements'
-import { Gap, URI } from '../../utils'
+import { Gap } from '../../utils'
 import { showMessage} from "react-native-flash-message";
 import { GetUsers } from '../../redux/actions/Users'
 import API from '../../service'
-
-
+import { SOCKETURI } from '../../utils/URI'
+import { io } from 'socket.io-client'
 export default function PinConfirmation({navigation }) {
     const Auth = useSelector((s)=> s.Auth)
     const [data,setData] = useState([])
-    const auth = useSelector((s)=> s.Auth)
     const [pin1,setPin1] = useState('')
     const [pin2,setPin2] = useState('')
     const [pin3,setPin3] = useState('')
@@ -25,14 +23,18 @@ export default function PinConfirmation({navigation }) {
     const pin = pin1+pin2+pin3+pin4+pin5+pin6;
     const [active,setActive] = useState(false)
     const dispacth = useDispatch();
-
+    const socket = io(SOCKETURI)
     useEffect(() => {
         AsyncStorage.getItem('dataTransfer').then(res => setData(JSON.parse(res)))
+        
+    },[])
+    useEffect(() => {
         pin.length == 6 ? setActive(true) : setActive(false)
-    },[pin1,pin2,pin3,pin4,pin5,pin6,data])
-    
+    },[pin1,pin2,pin3,pin4,pin5,pin6])
+
     const onContinue = () => 
     {
+        dispacth({type:'LOADING'})
         if (!pin1||!pin2||!pin3||!pin4||!pin5||!pin6) {
             showMessage({
                 message: "Pin is required",
@@ -49,17 +51,20 @@ export default function PinConfirmation({navigation }) {
             balanceLeft :parseInt(data.available),
             pin: parseInt(pin),
         }
-        const headers = { headers: {'Authorization': `${auth.data.token.token}`}}
-        Axios.post(`${URI}/transaction/`,form,headers)
+        API.pinConfirmation(form)
         .then(res => {
+
            dispacth(GetUsers({token:Auth?.data?.token?.token}))
-        //    console.log(res)
            setPin1('')
            setPin2('')
            setPin3('')
            setPin4('')
            setPin5('')
            setPin6('')
+           AsyncStorage.getItem('dataTransfer').then(res => {
+            const result = JSON.parse(res);
+            socket.emit('initial-user', result.idReceiver);
+           })
            API.FireBase(data.tokenFcm,data.name,data.amount)
            .then(res => {
                 
@@ -68,14 +73,16 @@ export default function PinConfirmation({navigation }) {
                
            })
           navigation.navigate('TransferSuccess')
+          dispacth({type:'LOADING_STOP'})
 
         })
         .catch(err => {
-        //    console.log('error dari transfer',err)
            showMessage({
             message: "Pin invalid",
             type: "danger",
         });
+        dispacth({type:'LOADING_STOP'})
+        // navigation.navigate('TransferSuccess')
         })
     }
     return (

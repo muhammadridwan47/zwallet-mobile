@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, ScrollView} from 'react-native'
-import { useSelector } from 'react-redux'
-import { IcArrowUpGreen, IcArrowUpRed, IcChart } from '../../assets'
+import { IcArrowUpGreen, IcArrowUpRed } from '../../assets'
 import { GoBack, LinkHistory } from '../../components'
 import { CardPerson } from '../../elements'
 import API from '../../service'
@@ -16,7 +15,6 @@ export default function DetailTransaction({navigation,route}) {
     useEffect(() => {
         API.TransactionDetail()
         .then(res =>{
-            // console.log('isi dari transaction detail :',res.data)
             setTransaction(res.data)
             setPayment({income:res.income,outcome:res.outcome})
         })
@@ -57,7 +55,7 @@ export default function DetailTransaction({navigation,route}) {
                         <View >
                             <View style={{flexDirection:'row',alignItems:'flex-end',height:223}}>
                                   <View style={{alignItems:'center'}}>
-                                     <View style={{width:14,height:'100%',backgroundColor:'#6379F4',borderRadius:15}}></View>
+                                     <View style={{width:14,height:'40%',backgroundColor:'#6379F4',borderRadius:15}}></View>
                                      <Text style={{fontSize:14,color:'#8F8F8F',marginTop:15}}>
                                          Sat
                                      </Text>

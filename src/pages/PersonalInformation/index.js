@@ -10,9 +10,9 @@ export default function PersonalInformation({navigation}) {
     const [profileData,setProfileData] = useState([]);
 
     useEffect(() => {
-        User?.data?.data[0] && setProfileData(User?.data?.data[0])
+        User?.data && setProfileData(User?.data)
         return () => {
-            User?.data?.data[0] && setProfileData(User?.data?.data[0])
+            User?.data && setProfileData(User?.data)
         }
     }, [User])
 

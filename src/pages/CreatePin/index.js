@@ -1,9 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Axios from 'axios';
 import React, { useState } from 'react';
 import {Text, View,ScrollView,StyleSheet} from 'react-native'
+import { showMessage } from 'react-native-flash-message';
 import { ButtonAuth, FormPin} from '../../elements';
-import { Gap, URI } from '../../utils';
+import API from '../../service';
+import { Gap } from '../../utils';
 
 const CreatePin = ({navigation}) => {
     const [pin1,setPin1] = useState('')
@@ -21,7 +22,10 @@ const CreatePin = ({navigation}) => {
     const handlePin = () =>
     {
         if (!pin1||!pin2||!pin3||!pin4||!pin5||!pin6) {
-            alert("Pin is required!")
+            showMessage({
+                message: "Pin is required",
+                type: "danger",
+              });
             return false   
         }else{
             AsyncStorage.getItem('emailRegister').then(res =>{
@@ -36,7 +40,7 @@ const CreatePin = ({navigation}) => {
                     email:res,
                     pin: pin,
                 }
-                  Axios.patch(`${URI}/auth/create_pin`,data)
+                    API.createPin(data)
                     .then(res => {
                         navigation.navigate('PinSuccess')
                     }).catch(err => {

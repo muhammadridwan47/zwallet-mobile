@@ -2,13 +2,14 @@ import React,{useEffect} from 'react'
 import { useState } from 'react'
 import { View, Text,Image, ScrollView,StyleSheet, TouchableOpacity} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { Foto, IcBell,IcArrowUp,IcPlus, IcAdmTransaction, IcAllUsers } from '../../assets'
+import { IcBell, IcAdmTransaction, IcAllUsers } from '../../assets'
 import { LinkHistory } from '../../components'
 import { CardPerson } from '../../elements'
 import { GetTopUp } from '../../redux/actions/TopUp'
 import { GetTransfer } from '../../redux/actions/Transfer'
 import API from '../../service'
 import { Gap} from '../../utils'
+import { URIIMAGE } from '../../utils/URI'
 
 export default function Admin({navigation}) {
     const User = useSelector((s)=> s.Users)
@@ -20,22 +21,16 @@ export default function Admin({navigation}) {
     const dispacth = useDispatch();
 
     useEffect(() => {
-        User?.data?.data && setDashboard(User?.data?.data[0])
+        User?.data && setDashboard(User?.data)
         API.HistoryHome().then(res => {
             setTransaction(res.data)
-            // console.log('dari dashboard: ',res)
-            // console.log('dari tran: ',transaction)
         })
         API.UserAll().then(res => {
-            // console.log('get all user ',res.data)
             setCountUser(res.data.length)
         })
         API.TransactionAll().then(res => {
-            // console.log('isi dari transaction all',res.data)
-
             let countAmount = res.data.map( (item,index) => {
                 const countBalance = parseInt(item.amountTransfer)
-
                 return countBalance
             })
             function myFunc(total, num) {
@@ -49,9 +44,6 @@ export default function Admin({navigation}) {
             setCountTransaction(res.data.length)
             setTransaction(res.data)
         })
-
-
-        // console.log(dashboard)
     },[User])
 
     const handleTopUp = () =>
@@ -71,7 +63,7 @@ export default function Admin({navigation}) {
                 <View style={styles.wrapperContent}>
                     <View style={styles.Profile}>
                         <TouchableOpacity style={styles.profileWrapper} onPress={()=> navigation.navigate('Profile')}>
-                            <Image source={{uri:dashboard?.img}}  style={styles.image}/>
+                            <Image source={{uri:URIIMAGE+dashboard?.img}}  style={styles.image}/>
                             <Gap width={20}/>
                             <View>
                                 <Text style={styles.profileTitle}>Hello,</Text>

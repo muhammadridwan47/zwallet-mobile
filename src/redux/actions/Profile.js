@@ -1,5 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
+import { URI } from '../../utils'
 
 const DeletePhoneRequest = ()=> {
     return{
@@ -85,21 +86,20 @@ const ChangePinError = (error)=> {
 export const DeletePhoneNumber = (id) => {
     return (dispatch) =>{
         dispatch(DeletePhoneRequest())
-
-        // console.log('isi dari get user: ',fields.token.accessToken)
         let data = {
             phone : '-'
         }
         data = qs.stringify(data);
-        const token = JSON.parse(localStorage.getItem("token"));
-        const headers = { headers: {'Authorization': `Bearer ${token.accessToken}`}}  
-        axios.patch(`${process.env.REACT_APP_API}/profile/${id}`,data,headers)
-        .then((res)=> {
-            const data = res.data
-            dispatch(DeletePhoneSuccess(data))
-        }).catch((err)=> {
-            const message = err.message
-            dispatch(DeletePhoneError(message))
+        AsyncStorage.getItem('token').then(token =>{
+            const headers = { headers: {'Authorization': `${token.accessToken}`}}  
+            axios.patch(`${URI}/profile/${id}`,data,headers)
+            .then((res)=> {
+                const data = res.data
+                dispatch(DeletePhoneSuccess(data))
+            }).catch((err)=> {
+                const message = err.message
+                dispatch(DeletePhoneError(message))
+            })
         })
     }
 }
@@ -107,22 +107,21 @@ export const DeletePhoneNumber = (id) => {
 export const AddPhoneNumberAction = (id,number) => {
     return (dispatch) =>{
         dispatch(AddPhoneRequest())
-        // console.log('ini dari add phone: ',id,number)
-        // console.log('isi dari get user: ',fields.token.accessToken)
         let value = '+62';
         let data = {
             phone : value + number
         }
-        const token = JSON.parse(localStorage.getItem("token"));
-        const headers = { headers: {'Authorization': `Bearer ${token.accessToken}`}}  
-        data = qs.stringify(data);
-        axios.patch(`${process.env.REACT_APP_API}/profile/${id}`,data,headers)
-        .then((res)=> {
-            const data = res.data
-            dispatch(AddPhoneSuccess(data))
-        }).catch((err)=> {
-            const message = err.message
-            dispatch(AddPhoneError(message))
+        AsyncStorage.getItem('token').then(token =>{
+            const headers = { headers: {'Authorization': `${token}`}}  
+            data = qs.stringify(data);
+            axios.patch(`${URI}/profile/${id}`,data,headers)
+            .then((res)=> {
+                const data = res.data
+                dispatch(AddPhoneSuccess(data))
+            }).catch((err)=> {
+                const message = err.message
+                dispatch(AddPhoneError(message))
+            })
         })
     }
 }
@@ -130,21 +129,20 @@ export const AddPhoneNumberAction = (id,number) => {
 export const ChangePasswordAction = (id,newPassword) => {
     return (dispatch) =>{
         dispatch(ChangePasswordRequest())
-        // console.log('ini dari add changepassword: ',id,newPassword)
-        // console.log('isi dari get user: ',fields.token.accessToken)
         let data = {
             password : newPassword
         }
         data = qs.stringify(data);
-        const token = JSON.parse(localStorage.getItem("token"));
-        const headers = { headers: {'Authorization': `Bearer ${token.accessToken}`}}  
-        axios.patch(`${process.env.REACT_APP_API}/profile/${id}`,data,headers)
-        .then((res)=> {
-            const data = res.data
-            dispatch(ChangePasswordSuccess(data))
-        }).catch((err)=> {
-            const message = err.message
-            dispatch(ChangePasswordError(message))
+        AsyncStorage.getItem('token').then(token =>{
+            const headers = { headers: {'Authorization': `${token}`}}  
+            axios.patch(`${URI}/profile/${id}`,data,headers)
+            .then((res)=> {
+                const data = res.data
+                dispatch(ChangePasswordSuccess(data))
+            }).catch((err)=> {
+                const message = err.message
+                dispatch(ChangePasswordError(message))
+            })
         })
     }
 }
@@ -152,18 +150,17 @@ export const ChangePasswordAction = (id,newPassword) => {
 export const ChangePinAction = (id,pin) => {
     return (dispatch) =>{
         dispatch(ChangePinRequest())
-        console.log('ini dari  change pin: ',id,pin)
-        // console.log('isi dari get user: ',fields.token.accessToken)
         let data = qs.stringify(pin);
-        const token = JSON.parse(localStorage.getItem("token"));
-        const headers = { headers: {'Authorization': `Bearer ${token.accessToken}`}}  
-        axios.patch(`${process.env.REACT_APP_API}/profile/${id}`,data,headers)
-        .then((res)=> {
-            const data = res.data
-            dispatch(ChangePinSuccess(data))
-        }).catch((err)=> {
-            const message = err.message
-            dispatch(ChangePinError(message))
+        AsyncStorage.getItem('token').then(token =>{
+            const headers = { headers: {'Authorization': `${token}`}}  
+            axios.patch(`${URI}/profile/${id}`,data,headers)
+            .then((res)=> {
+                const data = res.data
+                dispatch(ChangePinSuccess(data))
+            }).catch((err)=> {
+                const message = err.message
+                dispatch(ChangePinError(message))
+            })
         })
     }
 }

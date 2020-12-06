@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import {Text, View,ScrollView,StyleSheet} from 'react-native'
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { LinkAuth } from '../../components';
 import { ButtonAuth, FormGroup } from '../../elements';
 import { SignUpAction } from '../../redux/actions/Auth';
@@ -14,6 +14,7 @@ const SignUp = ({navigation}) => {
   const [password,setPassword] = useState('')
   const [active,setActive] = useState(false)
   const [showKey,setShowKey] = useState(true)
+  const {status} = useSelector(state => state.SignUp)
 
   const dispacth = useDispatch();
 
@@ -48,6 +49,14 @@ const SignUp = ({navigation}) => {
       });
       return false
     }
+    
+    if (password.length <= 7 ) {
+      showMessage({
+          message: "password min length 8",
+          type: "danger",
+        });
+      return false
+    }
 
     let data = {
       email: email,
@@ -56,11 +65,12 @@ const SignUp = ({navigation}) => {
     }
 
     dispacth(SignUpAction(data))
+
     AsyncStorage.setItem('emailRegister',email)
     setPassword('')
     setEmail('')
     setUserName('')
-    navigation.navigate('CreatePin')
+    status && navigation.navigate('CreatePin')
   }
   const showPassword = (value) => 
   {

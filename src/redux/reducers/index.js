@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import Auth,{SignUp} from './Auth'
 import Users from './Users'
+import Loading from './Loading'
 import Transfer from './Transfer'
 import {TransferById,TransferSend} from './Transfer'
 import TopUp from './TopUp'
@@ -18,9 +19,8 @@ const reducers = combineReducers({
     AddPhone,
     changePassword,
     changePin,
-    SignUp
-
-    
+    SignUp,
+    Loading
 })
 
 export default reducers

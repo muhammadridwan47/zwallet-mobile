@@ -25,7 +25,7 @@ export default function AmountInput({navigation}) {
     const [permitted,setPermitted] = useState(true)
 
     useEffect(() => {
-        User?.data?.data[0] && setProfile(User?.data?.data[0])
+        User?.data && setProfile(User?.data)
         dataTransfer?.data && setData(dataTransfer?.data)
     },[dataTransfer,profile])
     

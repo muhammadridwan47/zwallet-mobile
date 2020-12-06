@@ -20,20 +20,16 @@ const UsersError = (error)=> {
     }
 }
 
-
-
 export const GetUsers = (fields) => {
     return (dispatch) =>{
         dispatch(UsersRequest())
         const headers = { headers: {'Authorization': fields.token}}
         return Axios.get(`${URI}/user`,headers)
         .then((res)=> {
-            const data = res.data
-            // console.log('hasil dari redux user: ',data)
+            const data = res.data.data[0]
             dispatch(UsersSuccess(data))
         }).catch((err)=> {
             const message = err.message
-            // console.log('user error redux user: ',message)
             dispatch(UsersError(message))
         })
     }

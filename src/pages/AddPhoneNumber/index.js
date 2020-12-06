@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import { View, Text, StyleSheet, TextInput } from 'react-native'
 import { GoBack } from '../../components';
 import { ButtonAuth } from '../../elements';
-import { Gap, URI } from '../../utils';
+import { Gap } from '../../utils';
 import { IcPhone } from '../../assets';
 import { useSelector,useDispatch } from 'react-redux';
-import Axios from 'axios';
 import { GetUsers } from '../../redux/actions/Users';
 import { showMessage} from "react-native-flash-message";
+import API from '../../service';
 
 export default function AddPhoneNumber({navigation}) {
     const [active,setActive] = useState(false)
@@ -33,15 +33,11 @@ export default function AddPhoneNumber({navigation}) {
         let data = {
             phoneNumber : '62'+phone
         }
-        const headers = { headers: {'Authorization': `${Auth.data.token.token}`}}   
-        Axios.patch(`${URI}/user/patch_user`,data,headers)
+        API.addPhoneNumber(data)
         .then(res => {
             dispacth(GetUsers({token:Auth?.data?.token?.token}));
             navigation.navigate('ManagePhoneNumber');
         })
-        .catch(err => {
-        //   console.log('error dari delete phoneNumber',err)
-        });
 
     }
 
