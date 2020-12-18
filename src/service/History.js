@@ -24,7 +24,6 @@ const HistoryByDate = (dateStart,endDate) =>
      const promise = new Promise((resolve, reject) => {
             AsyncStorage.getItem('token').then(token =>{
                 const headers = { headers: {'Authorization':token,'start':dateStart,'until':endDate }}
-                console.log(headers)
                 axios.get(`${URI}/transaction/history`,headers)
                 .then((result)=>{
                     resolve(result.data);

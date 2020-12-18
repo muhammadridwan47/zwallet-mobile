@@ -11,7 +11,6 @@ const GetDataTransfer = (limit) =>
                 .then(res =>{
                     resolve(res.data.data)
                 }).catch(err => {
-                //   console.log(err)
                 });
              })
             
@@ -29,7 +28,6 @@ const MaxData = () =>
                     const result = res.data.data
                     resolve(result.length)
                 }).catch(err => {
-                //   console.log(err)
                 });
              })
             
@@ -47,7 +45,6 @@ const MoreData = (limit) =>
                     const result = res.data.data
                     resolve(result)
                 }).catch(err => {
-                //   console.log(err)
                 });
              })
             
@@ -64,7 +61,6 @@ const SearchReceiver = (query,limit) =>
                     const result = res.data.data
                     resolve(result)
                 }).catch(err => {
-                //   console.log(err)
                 });
              })
             
@@ -80,7 +76,6 @@ const TransactionDetail = () =>
                 axios.get(`${URI}/transaction/detail`,headers)
                 .then((result)=>{
                     resolve(result.data.data);
-                    // console.log('dari transaction detail: ',result.data)
                 })
                 .catch(err => {
                     reject(err);
@@ -124,6 +119,26 @@ const TransactionAll = () =>
      return promise;
 }
 
+const Midtrans = (data) =>
+{
+     const promise = new Promise((resolve, reject) => {
+            AsyncStorage.getItem('token').then(token =>{
+                const headers = { headers: {'Authorization': `${token}`}}  
+                axios.patch(`${URI}/topup/midtrans`,data,headers)
+                .then(res =>{
+                        resolve(res.data.token)
+                })
+                .catch(err => {
+                    reject(err.message)
+                })
+             })
+     });
+     return promise;
+}
+
+
+
+
 export {
     GetDataTransfer,
     MaxData,
@@ -131,5 +146,6 @@ export {
     SearchReceiver,
     TransactionDetail,
     pinConfirmation,
-    TransactionAll
+    TransactionAll,
+    Midtrans
 }

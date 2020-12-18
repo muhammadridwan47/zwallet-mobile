@@ -21,7 +21,7 @@ export default function Profile({navigation}) {
     const [logout,setLogout] = useState(true);
     const [modal,setModal] = useState(false)
     const [photo,setPhoto] = useState()
-    const [fullName,setFullName] = useState()
+    const [fullName,setFullName] = useState('')
     const dispacth = useDispatch();
 
 
@@ -74,7 +74,23 @@ export default function Profile({navigation}) {
             }
         });
     }
-   
+    
+
+    const rename = () => 
+    {
+       API.rename({fullName:fullName})
+       .then(res => {
+        dispacth(GetUsers({token:Auth?.data?.token?.token}));
+        setModal(false);
+        setFullName('');
+        showMessage({
+            message: "Name have been changed",
+            type: "success",
+        });
+       })
+       
+    }
+
     const switchChange = (value) =>
     {
         if (value === false) {
@@ -151,6 +167,8 @@ export default function Profile({navigation}) {
                     <FormGroup icon="username" placeholder="Your Name" value={fullName} onChangeText={e => setFullName(e) }  />
                 </View>
             </ScrollView>
+            <Button title="Rename" onPress={() => rename()} />
+            <Gap height={10} />
             <Button title="close" onPress={() => setModal(false)} />
           </View>
         </Modal>

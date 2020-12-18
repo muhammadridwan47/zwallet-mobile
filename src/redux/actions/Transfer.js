@@ -110,7 +110,6 @@ const GetTransfer = () => {
     return (dispatch) =>{
         dispatch(TransferRequest())
         AsyncStorage.getItem('token').then(token => {
-            console.log('hasil data dari: ',token)
             const headers = { headers: {'Authorization': `${token}`}}
             return axios.get(`${URI}/user/all?sortBy=fullName&sortType=DESC&limit=6&page=0`,headers)
             .then((res)=> {

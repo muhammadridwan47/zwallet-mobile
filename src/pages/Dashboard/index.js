@@ -9,34 +9,19 @@ import { GetTopUp } from '../../redux/actions/TopUp'
 import { GetTransfer } from '../../redux/actions/Transfer'
 import API from '../../service'
 import { Gap} from '../../utils'
-import { SOCKETURI, URIIMAGE } from '../../utils/URI'
-import { io } from 'socket.io-client'
+import { URIIMAGE } from '../../utils/URI'
 
 export default function Dashboard({navigation}) {
     const {data} = useSelector((s)=> s.Users)
-    const [dashboard,setDashboard] = useState([]);
     const [transaction,setTransaction] = useState([]);
-    const [balance,setBalance] = useState('');
     const dispacth = useDispatch();
-    // const socket = io(SOCKETURI)
     
     useEffect(() => {
         API.HistoryHome().then(res => {
             setTransaction(res.data)
         })
-        // socket.emit('initial-user', dashboard?.id)
-        // User?.data?.data && socket.emit('initial-user', User?.data?.data[0].id)
-        // User?.data?.data && socket.on('get-data',(data) => {
-        //     setBalance(data)                
-        // })
      
     },[])
-    // useEffect(() => {
-    //     return () => {
-    //         socket.off('get-data')
-    //         // socket.off('initial-user')
-    //     }
-    // },[])
     
     const handleTopUp = () =>
     {
@@ -61,20 +46,18 @@ export default function Dashboard({navigation}) {
                             <Gap width={20}/>
                             <View>
                                 <Text style={styles.profileTitle}>Hello,</Text>
-                                {/* <Text style={styles.profileName}>{dashboard?.fullName}</Text> */}
                                 <Text style={styles.profileName}>{data?.fullName}</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=> navigation.navigate('Notification',{id:dashboard?.id})}>
+                        <TouchableOpacity onPress={()=> navigation.navigate('Notification',{id:data?.id})}>
                           <IcBell/>
                         </TouchableOpacity>
                     </View>
 
                     <Gap height={39} />
-                    <TouchableOpacity activeOpacity={0.8} style={styles.creditWrapper} onPress={()=> navigation.navigate('DetailTransaction',{id:dashboard?.id})}>
+                    <TouchableOpacity activeOpacity={0.8} style={styles.creditWrapper} onPress={()=> navigation.navigate('DetailTransaction',{id:data?.id})}>
                         <Text style={styles.creditBalance}>Balance</Text>
                         <Gap height={10} />
-                        {/* <Text style={styles.credit}>Rp{balance}</Text> */}
                         <Text style={styles.credit}>Rp{data?.balance}</Text>
                         <Gap height={10} />
                         <Text style={styles.phoneNumber}>{data?.phoneNumber && '+'+data?.phoneNumber}</Text>
@@ -94,14 +77,14 @@ export default function Dashboard({navigation}) {
                         </TouchableOpacity>  
                     </View>
                     <Gap height={40}/>
-                    <LinkHistory onPress={() => navigation.navigate('History',{id:dashboard?.id})}/>
+                    <LinkHistory onPress={() => navigation.navigate('History',{id:data?.id})}/>
                 </View>
                 <Gap height={25}/>
                 {
-                    transaction.map((data,index) => {
+                    transaction.map((tran,index) => {
                         return(
                                 <View key={index}>
-                                    <CardPerson name={data.receiveBy} amount={data.amountTransfer}  img={data.img} transfer="Transfer" idProfile={dashboard?.id} idReceiver={data.receiver} />
+                                    <CardPerson name={tran.receiveBy} amount={tran.amountTransfer}  img={tran.img} transfer="Transfer" idProfile={data.id} idReceiver={tran.receiver} />
                                     <Gap  height={20}/>
                                 </View>
                         )

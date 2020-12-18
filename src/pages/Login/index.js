@@ -7,22 +7,23 @@ import { useSelector,useDispatch } from 'react-redux';
 import { AuthLogin } from '../../redux/actions/Auth';
 import { showMessage} from "react-native-flash-message";
 const Login = ({navigation}) => {
+    const {isStatus} = useSelector((s)=> s.Auth)
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const [showKey,setShowKey] = useState(true)
     const [errorHandling,setError] = useState(false)
     const [active,setActive] = useState(false)
     const dispacth = useDispatch();
-    const Auth = useSelector((s)=> s.Auth)
+
     useEffect(() => {
-             Auth.isStatus === false ? setError(true) : setError(false)
-    },[Auth])
+              setError(isStatus)
+    },[isStatus])
 
     const form = (eml,pass) =>
     {
         setEmail(eml)
         setPassword(pass)
-        eml !== '' && pass !== '' ? (setActive(true),setError(false)) : setActive(false)
+        eml !== '' && pass !== '' ? setActive(true) : setActive(false)
     }
 
     const onHandleLogin = async () => {
@@ -62,18 +63,18 @@ const Login = ({navigation}) => {
             <Gap height={20}/>
             <Text style={styles.title}>Login to your existing account to access {'\n'} all the features in Zwallet.</Text>
             <Gap height={53}/>
-            <FormGroup icon="mail" placeholder="Enter your e-mail" value={email} error={errorHandling} onChangeText={e => form(e,password) } />
+            <FormGroup icon="mail" placeholder="Enter your e-mail" value={email} error={isStatus} onChangeText={e => form(e,password) } />
             <Gap height={60}/>
-            <FormGroup icon="password" placeholder="Enter your password" value={password}  onChangeText={e => form(email,e) }  secureTextEntry={showKey} error={errorHandling} showPassword={() => showPassword(showKey)} />
+            <FormGroup icon="password" placeholder="Enter your password" value={password}  onChangeText={e => form(email,e) }  secureTextEntry={showKey} error={isStatus} showPassword={() => showPassword(showKey)} />
             <Gap height={15}/>
             <TouchableOpacity onPress={() => navigation.navigate('ResetPassword')} >
                 <Text style={styles.forgotPassword} >Forgot password?</Text>
             </TouchableOpacity>
             {
-                errorHandling === true ? <Gap height={20}/> : <Gap height={75}/>
+                errorHandling ? <Gap height={20}/> : <Gap height={75}/>
             }
             {
-               errorHandling == true && <Text style={{fontSize:16,color:'#FF5B37',textAlign:'center',marginBottom:27}}>Email or Password Invalid</Text>
+                errorHandling  && <Text style={{fontSize:16,color:'#FF5B37',textAlign:'center',marginBottom:27}}>Email or Password Invalid</Text>
             }
             <ButtonAuth active={active} title="Login" onPress={() => onHandleLogin()}/>
             <Gap height={25}/>

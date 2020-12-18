@@ -59,6 +59,7 @@ export default function AmountInput({navigation}) {
     
             
                 const form = {
+                    sender:profile.fullName,
                     name :data.fullName,
                     phone:data.phoneNumber,
                     notes: notes,

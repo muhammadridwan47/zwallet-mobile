@@ -56,7 +56,6 @@ export default function ChangePin({navigation}) {
                     }
                     API.changePin(save)
                     .then(res => {
-                        // console.log(res.data)
                         setPin1('')
                         setPin2('')
                         setPin3('')
@@ -81,7 +80,6 @@ export default function ChangePin({navigation}) {
                             message: "Failed change pin!",
                             type: "danger",
                         });   
-                        // console.log(err)
                     });
 
                 }

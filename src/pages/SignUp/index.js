@@ -21,7 +21,6 @@ const SignUp = ({navigation}) => {
   const onHandle = (e) =>
   {
       setPassword(e)
-      console.log()
       e.length != 0 ? setActive(true) : setActive(false)
   }
 

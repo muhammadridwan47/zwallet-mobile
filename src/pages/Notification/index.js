@@ -1,6 +1,5 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { View, Text, StyleSheet, ScrollView} from 'react-native'
-import { useEffect } from 'react/cjs/react.development';
 import { GoBack } from '../../components';
 import {NotificationCard } from '../../elements';
 import API from '../../service';
@@ -11,7 +10,8 @@ export default function Notification({navigation,route}) {
     const {id} = route.params;
     const [transaction,setTransaction] = useState([])
     useEffect(() => {
-        API.HistoryHome().then(res => {
+        API.HistoryHome()
+        .then(res => {
             setTransaction(res.data)
         })
     },[])

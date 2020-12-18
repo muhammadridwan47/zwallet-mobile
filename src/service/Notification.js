@@ -18,10 +18,8 @@ const FireBase = (receive,name,amount) =>
         }
         axios.post(`${URI}`,data,headers)
         .then(res => {
-            // console.log('result From firebase: ',res.data)
         })
         .catch(err => {
-            // console.log('Failed From firebase: ',err)
         })
      });
      return promise;
@@ -34,7 +32,6 @@ const FCM = (data) =>
                 const headers = { headers: {'Authorization':token}}
                 axios.patch(`${URI}/user/patch_user`,data,headers)
                 .then((result)=>{
-                    // console.log('di terima')
                     resolve(result.data);
                 })
                 .catch(err => {

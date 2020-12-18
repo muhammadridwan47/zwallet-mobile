@@ -1,20 +1,57 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
-import { useSelector } from 'react-redux'
+import { View, Text, StyleSheet, ScrollView ,TouchableOpacity, TextInput, Button} from 'react-native'
+import { useSelector,useDispatch } from 'react-redux'
 import { IcTopUp } from '../../assets'
 import { GoBack } from '../../components'
 import { CardTopUp } from '../../elements'
-import { Gap } from '../../utils'
+import { Gap, Midtrans } from '../../utils'
+import Modal from 'react-native-modal';
+import { WebView } from 'react-native-webview';
+import API from '../../service'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { GetUsers } from '../../redux/actions/Users'
 
 export default function TopUp({navigation}) {
+   const [modal,setModal] = useState(false)
+   const [payment,setPayment] = useState(false)
    const topUp = useSelector(topup => topup.TopUp)
    const [data,setData] = useState([])
+   const [page,setPage] = useState('')
+   const [amount,setAmount] = useState('')
+   const dispacth = useDispatch();
+
    useEffect(() => {
       topUp?.data && setData(topUp.data)
    }, [topUp])
+    const pay = () => 
+    {
+        API.Midtrans({amount:amount})
+        .then(token => {
+            AsyncStorage.getItem('token').then(key => {
+               dispacth(GetUsers({token:key}))
+            })
+            setPage(Midtrans(token))
+            setPayment(true)
+            setModal(false)
+        })
+    }
     return (
+    <>
         <View style={styles.wrapper}>
+            {
+                payment === true &&
+                <View style={{position:'absolute',backgroundColor:'#fff',width:'100%',height:'100%',zIndex:99}}>
+                <View style={{paddingHorizontal:10}}>
+                 <GoBack page="Exit" white onPress={() => navigation.navigate('Dashboard')}/>
+                </View>
+                 <Gap height={10}/>
+                <WebView
+                    style={{backgroundColor:'rgba(0,0,0,0.1)'}}
+                    originWhitelist={['*']}
+                    source={{ html: page }} />
+                </View>
+             }
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.container}>
                     <Gap height={20}/>
@@ -22,7 +59,9 @@ export default function TopUp({navigation}) {
                     <Gap height={40}/>
                 
                     <View style={styles.topUpCard}>
-                        <IcTopUp/>
+                        <TouchableOpacity onPress={() => setModal(true)}>
+                            <IcTopUp/>
+                        </TouchableOpacity>
                         <Gap width={15}/>
                         <View>
                             <Text style={styles.headingTopUp}>Virtual Account Number</Text>
@@ -46,15 +85,26 @@ export default function TopUp({navigation}) {
                             )
                         })
                     }
-
-
                     <Gap height={40}/>
                 </View>
-
             </ScrollView>
- 
+            <Modal isVisible={modal}>
+                <View style={{height:'50%',backgroundColor:'white',borderRadius:10,padding:20}}>
+                    <ScrollView style={{height:'100%'}}>
+                        <Gap height={50}/>
+                        <View style={{paddingHorizontal:20}}>
+                            <TextInput placeholder="amount" onChangeText={(e) => setAmount(e)} style={{borderBottomWidth:1,borderBottomColor:'rgba(169, 169, 169, 0.6)'}} keyboardType="numeric"/>
+                        </View>
+                    </ScrollView>
+                    <Button title="Continue" onPress={() => pay()} />
+                    <Gap height={10} />
+                    <Button title="close" color="#FF5B37" onPress={() => setModal(false)} />
+                </View>
+             </Modal>
 
         </View>
+
+    </>
     )
 }
 

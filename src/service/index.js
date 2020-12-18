@@ -1,5 +1,5 @@
-import {GetDataTransfer,MaxData,MoreData,SearchReceiver,TransactionDetail,pinConfirmation,TransactionAll} from './Transaction'
-import {addPhoneNumber,changePin,deletePhoneNumber,changePassword,UploadImage} from './Profile'
+import {GetDataTransfer,MaxData,MoreData,SearchReceiver,TransactionDetail,pinConfirmation,TransactionAll,Midtrans} from './Transaction'
+import {addPhoneNumber,changePin,deletePhoneNumber,changePassword,UploadImage,rename} from './Profile'
 import {UserAll} from './Admin'
 import {HistoryHome,HistoryByDate} from './History'
 import {FCM,FireBase} from './Notification'
@@ -25,7 +25,8 @@ const API ={
     MaxData,
     MoreData,
     SearchReceiver,
-    
+    Midtrans,
+    rename
 }
 
 export default API;

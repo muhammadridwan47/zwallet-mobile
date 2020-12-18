@@ -8,7 +8,6 @@ import { Gap } from '../../utils'
 
 export default function DetailTransaction({navigation,route}) {
     const {id} = route.params;
-    // console.log(id)
     const [transaction,setTransaction] = useState([]);
     const [payment,setPayment] = useState({income:'',outcome:''});
 

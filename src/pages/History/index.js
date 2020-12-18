@@ -49,7 +49,6 @@ export default function History({navigation,route}) {
           API.HistoryByDate(dateTime.end,dateTime.start).then(res => {
               setTransaction(res.data.outMonth)
           }).catch(err => {
-            //   console.log(err.data)
               setTransaction([])
           })
 

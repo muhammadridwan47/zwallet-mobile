@@ -8,7 +8,6 @@ import SplashScreen from 'react-native-splash-screen'
 import FlashMessage from "react-native-flash-message";
 import { LoadingShow } from './elements';
 
-
 function MainApp() {
   const {loading} = useSelector(s => s.Loading);
   const dispatch = useDispatch()
@@ -16,6 +15,7 @@ function MainApp() {
   useEffect(() => {
     SplashScreen.hide();
     dispatch({type:'LOADING_STOP'})
+    dispatch({type:'OFF'})
   },[])
   return (
     <>
@@ -41,28 +41,6 @@ const App = () => {
     </>
   );
 };
-
-// const App = () => {
-//   const {Loading} = useSelector(s => s.Loading);
-//   const { store, persistor } = configureStore();
-//   useEffect(() => {
-//     SplashScreen.hide();
-//   },[])
-//   return (
-//     <>
-//     <Provider store={store}>
-//       <PersistGate loading={null} persistor={persistor}> 
-//         <NavigationContainer>
-//             <Router/>
-//         </NavigationContainer>
-//       </PersistGate>
-//     </Provider>
-//     <FlashMessage position="top" />
-//     {Loading.Loading && <Loading/>}
-//     </>
-//   );
-// };
-
 
 export default App;
 

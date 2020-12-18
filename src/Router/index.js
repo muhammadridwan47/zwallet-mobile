@@ -3,7 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useSelector,useDispatch } from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import { 
-    Splash,
     Login,
     SignUp,
     CreatePin,
@@ -42,10 +41,6 @@ export default function Router({navigation}) {
         dispacth(GetUsers({token:Auth?.data?.token?.token}))
         // Assume a message-notification contains a "type" property in the data payload of the screen to open
         messaging().onNotificationOpenedApp(remoteMessage => {
-            // console.log(
-            //   'Notification caused app to open from background state:',
-            //   remoteMessage.notification,
-            // );
             navigation.navigate('SignUp');
           });
       
@@ -54,15 +49,11 @@ export default function Router({navigation}) {
             .getInitialNotification()
             .then(remoteMessage => {
               if (remoteMessage) {
-                // console.log(
-                //   'Notification caused app to open from quit state:',
-                //   remoteMessage.notification,
-                // );
-                setInitialRoute('SignUp'); // e.g. "Settings"
+              
+                setInitialRoute(initialRoute); // e.g. "Settings"
               }
               setLoading(false);
             });    
-
 
     },[Auth])
     if (loading) {

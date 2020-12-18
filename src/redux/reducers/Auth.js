@@ -1,6 +1,7 @@
 const initialState = {
   data: [],
   loading: false,
+  isStatus:false
 };
 
 const regsiterState = {
@@ -21,13 +22,14 @@ const Auth = (state = initialState, action = {}) => {
         ...state,
         loading: false,
         isLogin: true,
+        isStatus: false,
         data: action.payload
       };
     case 'LOGIN_ERROR':
       return {
         ...state,
         isLogin: false,
-        isStatus: false,
+        isStatus: true,
         loading: false,
         data:[],
         error: action.payload
@@ -37,12 +39,17 @@ const Auth = (state = initialState, action = {}) => {
         ...state,
         loading: false,
         isLogin: false,
-        isStatus: true,
+        isStatus: false,
         data:[],
         _persist: {
           rehydrated: true,
           version: -1
         }
+      };
+    case 'OFF':
+      return {
+        ...state,
+        isStatus: false,
       };
     default:
       return state

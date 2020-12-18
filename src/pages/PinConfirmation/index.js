@@ -9,8 +9,6 @@ import { Gap } from '../../utils'
 import { showMessage} from "react-native-flash-message";
 import { GetUsers } from '../../redux/actions/Users'
 import API from '../../service'
-import { SOCKETURI } from '../../utils/URI'
-import { io } from 'socket.io-client'
 export default function PinConfirmation({navigation }) {
     const Auth = useSelector((s)=> s.Auth)
     const [data,setData] = useState([])
@@ -23,7 +21,6 @@ export default function PinConfirmation({navigation }) {
     const pin = pin1+pin2+pin3+pin4+pin5+pin6;
     const [active,setActive] = useState(false)
     const dispacth = useDispatch();
-    const socket = io(SOCKETURI)
     useEffect(() => {
         AsyncStorage.getItem('dataTransfer').then(res => setData(JSON.parse(res)))
         
@@ -63,15 +60,12 @@ export default function PinConfirmation({navigation }) {
            setPin6('')
            AsyncStorage.getItem('dataTransfer').then(res => {
             const result = JSON.parse(res);
-            socket.emit('initial-user', result.idReceiver);
            })
-           API.FireBase(data.tokenFcm,data.name,data.amount)
+           API.FireBase(data.tokenFcm,data.sender,data.amount)
            .then(res => {
                 
            })
-           .catch(err => {
-               
-           })
+           
           navigation.navigate('TransferSuccess')
           dispacth({type:'LOADING_STOP'})
 

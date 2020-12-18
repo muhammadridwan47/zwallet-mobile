@@ -33,7 +33,24 @@ const changePin = (data) =>
      });
      return promise;
 }
+
 const deletePhoneNumber = (data) =>
+{
+     const promise = new Promise((resolve, reject) => {
+            AsyncStorage.getItem('token').then(token =>{
+                const headers = { headers: {'Authorization':token}}
+                axios.patch(`${URI}/user/patch_user`,data,headers)
+                .then((result)=>{
+                    resolve(result.data);
+                })
+                .catch(err => {
+                    reject(err);
+                })
+             })
+     });
+     return promise;
+}
+const rename = (data) =>
 {
      const promise = new Promise((resolve, reject) => {
             AsyncStorage.getItem('token').then(token =>{
@@ -92,5 +109,6 @@ export {
     changePin,
     deletePhoneNumber,
     changePassword,
-    UploadImage
+    UploadImage,
+    rename
 }

@@ -96,7 +96,6 @@ export const SignUpAction = (data) => {
             dispatch({type:'LOADING_STOP'})
             const message = err.message
             dispatch(AuthRegisterError(message))
-            // console.log(message)
         })
     }
 }

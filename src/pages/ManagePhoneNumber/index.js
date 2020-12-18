@@ -31,7 +31,6 @@ export default function ManagePhoneNumber({navigation}) {
              navigation.navigate('AddPhoneNumber')
         })
         .catch(err => {
-        //   console.log('error dari delete phoneNumber',err)
         });
     }
     
