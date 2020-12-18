@@ -1,5 +1,5 @@
 <h1 align="center">
-	<a href="https://zwallet.muhammadriduwan.com/">
+	<a href="http://bit.ly/zwallet-application/">
 		ZWallet Mobile Version
 	</a>
 </h1>
@@ -18,13 +18,9 @@
 Halo,<strong>Everyone</strong> kali ini saya persembahkan.
 Zwallet Apps adalah aplikasi payment gateway berbasis mobile yang digunakan untuk transfer uang dan isi saldo secara digital. Untuk fitur top up sudah terintegrasi dengan Midtrans. Aplikasi ini dibangun dengan menggunakan React Native sebagai framework.
 
-### # Download App
-<a href="http://bit.ly/zwallet-application">
- 	Click Me
-</a>
-<br/>
-### # HOW TO INSTALL
 
+
+### # HOW TO INSTALL
 
 
 Download the projects:
