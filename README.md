@@ -22,6 +22,7 @@ Zwallet Apps adalah aplikasi payment gateway berbasis mobile yang digunakan untu
 <a href="http://bit.ly/zwallet-application">
  	Click Me
 </a>
+<br/>
 ### # HOW TO INSTALL
 
 
