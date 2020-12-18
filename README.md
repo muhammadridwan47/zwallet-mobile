@@ -48,7 +48,7 @@ yarn OR npm i
 
 running App
 ```
-yarn android or react-native run-android
+yarn android or npx react-native run-android
 ```
 
 
