@@ -18,7 +18,13 @@
 Halo,<strong>Everyone</strong> kali ini saya persembahkan.
 Zwallet Apps adalah aplikasi payment gateway berbasis mobile yang digunakan untuk transfer uang dan isi saldo secara digital. Untuk fitur top up sudah terintegrasi dengan Midtrans. Aplikasi ini dibangun dengan menggunakan React Native sebagai framework.
 
+### # Download App
+<a href="http://bit.ly/zwallet-application">
+ 	Click Me
+</a>
 ### # HOW TO INSTALL
+
+
 
 Download the projects:
 
